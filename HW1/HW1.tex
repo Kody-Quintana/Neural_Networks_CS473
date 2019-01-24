@@ -147,7 +147,6 @@ Artificial Neural Network\\
 \section{}
 \question
 Given:
-
 $$
 f(x,y) = 2x cos(y) + 2y sin(x)
 $$
@@ -168,7 +167,20 @@ $$
 $$
 \end{enumerate}
 \closequestion
-
+\begin{enumerate}[label=(\alph*)]
+\item$
+\frac
+	{\partial f}
+	{\partial x}
+= 2cos(y) + 2ycos(x)
+$
+\item$
+\frac
+	{\partial f}
+	{\partial y}
+= -2xsin(y) + 2sin(x)
+$
+\end{enumerate}
 
 \section{}
 \question
@@ -181,7 +193,6 @@ $$
 $$
 \vec{x} = [1.3\ 1.7\ 4.5]^T
 $$
-\\[1\baselineskip]
 
 Find:
 
@@ -197,10 +208,11 @@ $$
 \vec{W}^T \vec{X}
 $$
 \closequestion
-\cppfile{main.cpp}
+
 As we discussed, the dot operator is just a convenience abstraction for the summation of each element.
 To take advantage of this abstraction in C++ I created a namespace where I overrode the * operator for vectors to return the summation of each element times the corresponding element of the second vector.
 The answer is 3.6.
+\cppfile{main.cpp}
 
 
 \end{flushleft}
