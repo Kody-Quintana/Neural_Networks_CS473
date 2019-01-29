@@ -1,0 +1,180 @@
+\documentclass[14pt]{article}
+\usepackage{hyperref}
+\usepackage[table]{xcolor}
+\usepackage{collcell}
+\usepackage{hhline}
+\usepackage{pgf}
+\usepackage{xspace}
+\usepackage[shortlabels]{enumitem}
+
+
+\usepackage{mathtools}
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+
+\newcommand\gray{gray}
+\newcommand\ColCell[1]{%
+  \pgfmathparse{#1/255>0.7?1:0}%
+    \ifnum\pgfmathresult=0\relax\color{white}\fi
+  \pgfmathparse{#1/255}%
+  \expandafter\cellcolor\expandafter[%
+    \expandafter\gray\expandafter]\expandafter{\pgfmathresult}#1}
+\newcolumntype{E}{>{\collectcell\ColCell}b{2em}<{\endcollectcell}}
+
+
+
+\usepackage{fancyvrb}
+
+\usepackage{tcolorbox}
+\definecolor{backgrey}{RGB}{248,249,250}
+\definecolor{bordergrey}{RGB}{234,236,240}
+
+\usepackage[langlinenos=true]{minted}
+\usepackage[utf8]{inputenc}
+\usepackage{tabularx}
+\newcolumntype{Y}{>{\centering\arraybackslash}X}
+
+\definecolor{mintedbackground}{rgb}{0.95,0.95,0.95}
+
+
+\usepackage{fontspec}
+\setmainfont{Futura}
+
+\setlength{\parskip}{.8em} 
+
+\usepackage{tikz}
+\usetikzlibrary{matrix}
+\usemintedstyle{trac}
+
+\usepackage[english]{babel}
+\usepackage[letterpaper]{geometry}
+\usepackage{titlesec}
+
+\usepackage{fancyhdr}
+
+\renewcommand{\theFancyVerbLine}{\sffamily \textcolor{gray}{\normalsize \oldstylenums{\arabic{FancyVerbLine}}}}
+\geometry{top=1.0in, bottom=0.7in, left=1.0in, right=1.0in}
+\BeforeBeginEnvironment{pyreport}{\begin{tcolorbox}\normalsize}
+\AfterEndEnvironment{pyreport}{\end{tcolorbox}\large}
+\pagestyle{fancy}
+\lhead{}
+\chead{}
+\rhead{\LARGE Quintana \thepage}
+\lfoot{}
+\cfoot{}
+\rfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+
+\titleformat{\section}
+  {\normalfont\fontsize{12}{19}\bfseries}{Problem \thesection:}{1em}{}
+\titleformat{\subsection}[runin]
+  {\normalfont\fontsize{12}{19}\bfseries}{\thesubsection}{1em}{}
+
+
+
+\linespread{1.1}
+\newcommand{\question}{\begin{tcolorbox}[boxrule=0.5pt, colback=backgrey, colframe=bordergrey, sharpish corners]\subsection{}}
+\newcommand{\closequestion}{\end{tcolorbox}}
+
+
+\newmintedfile{python}{breaklines=true,
+bgcolor=mintedbackground,
+fontfamily=tt,
+fontsize=\normalsize,
+linenos=true,
+numberblanklines=true,
+numbersep=5pt,
+%gobble=0,
+frame=leftline,
+framerule=0.4pt,
+framesep=2mm,
+funcnamehighlighting=true,
+obeytabs=true,
+tabsize=4,
+mathescape=false
+samepage=false,
+showspaces=false,
+showtabs =false,
+texcl=false,
+}
+
+\newmintedfile{cpp}{breaklines=true,
+bgcolor=mintedbackground,
+fontfamily=tt,
+fontsize=\normalsize,
+linenos=true,
+numberblanklines=true,
+numbersep=5pt,
+%gobble=0,
+frame=leftline,
+framerule=0.4pt,
+framesep=2mm,
+funcnamehighlighting=true,
+obeytabs=true,
+tabsize=3,
+mathescape=false
+samepage=false,
+showspaces=false,
+showtabs=false,
+texcl=false,
+}
+
+\linespread{1.1}
+\newcommand{\mintcpp}{\begin{minted}[xleftmargin=12pt,breaklines,linenos]{cpp}}
+\newcommand{\mintpy}{\begin{minted}[xleftmargin=12pt,breaklines,linenos]{python}}
+
+
+\def\tabularxcolumn#1{m{#1}}% vertical centering
+\newcolumntype{Y}{>{\centering\arraybackslash}X}
+
+
+\begin{document}
+\begin{flushleft}
+ 
+\large
+Kody Quintana\\
+CS 473\\
+Artificial Neural Network\\
+\today\\
+\boldmath
+
+\begin{center}
+Homework \# 2
+\end{center}
+
+Linear regression
+
+\begin{itemize}
+
+\item Solvable using closed form mathematics (pseudo-inverse)
+\item Nueral network allows us to play with some of the approximation algorithm terms to see how it performs compared to the closed form solution
+\end{itemize}
+
+We need a cost function:
+
+$J$
+
+$
+(e_{h})_{i} = (h - t)_{i} = \vec{W}^T \vec{X} + b - t_{I}
+$
+
+$
+(e_{y})_{i} = (\hat{y} - t)_{i}
+$
+
+$
+\hat{y} = \frac
+	{1}
+	{1 + e^{-h}}
+$
+
+
+Unknowns: $m$(slope) and $b$(intercept) -> $w_1$(weight) and $w_0$(bias)
+
+
+
+
+\end{flushleft}
+\end{document}
