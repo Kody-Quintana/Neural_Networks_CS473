@@ -5,6 +5,7 @@
 \usepackage{hhline}
 \usepackage{pgf}
 \usepackage{xspace}
+\usepackage[shortlabels]{enumitem}
 
 
 \usepackage{mathtools}
@@ -140,10 +141,9 @@ Artificial Neural Network\\
 \boldmath
 
 \begin{center}
-Lecture \#3
+Homework \# 2
 \end{center}
 
-Jacovian
 \question
 Given:
 
@@ -155,14 +155,36 @@ $
 
 find:
 
-(a) $h = \vec{W}^T \vec{X} $
+\begin{enumerate}[(a)]
+\item $h = \vec{W}^T \vec{X} $
 
-(b) $z = \frac
+\item $z = \frac
 	{1}
 	{1 + e^{-h}}$
 
-(c) will the nueron fire?
+\item will the nueron fire?
+\end{enumerate}
 \closequestion
+
+\begin{enumerate}[(a)]
+\item $h = \vec{W}^T \vec{X} = 11.73$
+
+\item $z = \frac
+	{1}
+	{1 + e^{-h}} = 
+	\frac
+	{1}
+	{1 + e^{-11.73}} =
+	\frac
+	{1}
+	{1 + 0.00000804869} =
+	0.999992
+$
+
+\item Yes, because $0.999992 \geq 0.5$
+\end{enumerate}
+
+\cppfile{cpp/main.cpp}
 
 \end{flushleft}
 \end{document}
