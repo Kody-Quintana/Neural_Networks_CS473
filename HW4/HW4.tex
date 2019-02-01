@@ -1,0 +1,81 @@
+\documentclass[14pt]{article}
+\usepackage{quintana}
+\begin{document}
+\begin{flushleft}
+ 
+\large
+Kody Quintana\\
+CS 473\\
+Artificial Neural Network\\
+\today\\
+\boldmath
+
+\section{50 points}
+\question
+Given:
+
+$$W^{k+1}_0 \leftarrow W^k_0 - 0.01 \cdot \frac{1}{4}
+	\sum_{i=1}^4 (W^k_0 + W^k_1 \tikzmark[blue]{xindex}{x_1} - \tikzmark[blue]{yindex}{y})_i \quad\quad(5)
+$$
+\begin{tikzpicture}[overlay, remember picture,node distance =2em]
+	\coordinate (Middle) at ($(xindex)!0.5!(yindex)$);
+	\node[,minimum width=2em,text=blue] (xindexlabel) [above=of Middle]{indexed};
+	\draw[,->,thick,draw=blue] (xindexlabel) to [in=90,out=-90] (xindex);
+	\draw[,->,thick,draw=blue] (xindexlabel) to [in=90,out=-90] (yindex);
+\end{tikzpicture}
+
+
+$$W^{k+1}_1 \leftarrow W^k_1 - 0.01 \cdot \frac{1}{4}
+	\sum_{i=1}^4 [(
+		\tikzmark[red]{doesnt1}{W^k_0} + 
+		\tikzmark[red]{doesnt2}{W^k_1} 
+		\tikzmark[blue]{does1}{x_1} - 
+		\tikzmark[blue]{does2}{y})
+		\tikzmark[blue]{does3}{x_1}]_i \quad\quad(6)
+$$
+\begin{tikzpicture}[overlay, remember picture,node distance =2em]
+	\coordinate (Middle) at ($(doesnt1)!0.5!(doesnt2)$);
+	\node[,minimum width=2em,text=red] (doesntlabel) [below=of Middle]{%
+		\begin{tabular}{c}
+		Doesn't\\
+		change
+		\end{tabular}
+	};
+		\draw[,->,thick,draw=red] (doesntlabel) to [in=-90,out=90] (doesnt1);
+		\draw[,->,thick,draw=red] (doesntlabel) to [in=-90,out=90] (doesnt2);
+	%
+	\node[,minimum width=2em,text=2em,text=blue] (doeslabel) [below=of does2]{%
+		\begin{tabular}{c}
+		Changes\\
+		with $i$
+		\end{tabular}
+	};
+		\draw[,->,thick,draw=blue] (doeslabel) to [in=-90,out=90] (does1);
+		\draw[,->,thick,draw=blue] (doeslabel) to [in=-90,out=90] (does2);
+		\draw[,->,thick,draw=blue] (doeslabel) to [in=-90,out=90] (does3);
+\end{tikzpicture}\\[4\baselineskip]
+            
+
+$\vec{W}^0 = [0\ 0]^T$
+
+$\vec{X} = [1.0\ 3.0\ 7.0\ 9.0]^T$
+
+$\vec{Y} = [3.0\ 7.7\ 8.0\ 7.6]^T$
+
+Find: 
+
+$W^1_0$ 
+and 
+$W^1_1$ 
+using your gradient descent rules for 
+$W^{k+1}_0$
+and
+$W^{k+1}_1$.
+
+Equations (5) and (6)
+
+
+
+\closequestion
+\end{flushleft}
+\end{document}
