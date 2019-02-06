@@ -2,6 +2,7 @@
 #include <vector>
 #include <cmath>
 #include <utility>
+#include <limits>
 
 using namespace std;
 
@@ -33,8 +34,6 @@ pair<T,T> next_epoch( pair<T,T> weights, vector<pair<T,T>> points, T learning_ra
 		b_gradient += -(2.0/N) * (y - (m * x) + b);
 		m_gradient += -(2.0/N) * x * (y - (m * x) + b);
 	}
-	cout << "b_gradient: " << b_gradient << endl;
-	cout << "m_gradient: " << m_gradient << endl;
 	return make_pair( b - (learning_rate * b_gradient),
 			m - (learning_rate * m_gradient) );
 }
@@ -50,13 +49,21 @@ int main( int argc, char** argv ){
 		{9.0, 7.6}
 	};	
 	pair<float,float> W{ 0, 0 };
-	float learning_rate = 0.00001;
+	float learning_rate = 0.0001;
 	cout << linear_error(W, points) << endl;
 
-	while( linear_error( W, points ) > 1 ){
+	float error_so_far = numeric_limits<float>::max();
+	float lowest_error = numeric_limits<float>::max();
+	pair<float,float> best;
+	while( error_so_far > 0.1 ){
+		error_so_far = linear_error( W, points );
 		W = next_epoch( W, points, learning_rate );
+		if (error_so_far < lowest_error){
+			lowest_error = error_so_far;
+			best = W;
+		}
 	}
-	cout << "M: " << W.second << "  B: " << W.first << endl;
+	cout << "M: " << best.second << "  B: " << best.first << endl;
 
 	return(0);
 }
