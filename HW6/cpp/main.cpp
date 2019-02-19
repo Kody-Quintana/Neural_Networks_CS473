@@ -6,8 +6,6 @@
 
 using namespace std;
 
-
-
 template<class T>
 T linear_error( pair<T,T> weights, vector<pair<T,T>> points ){
 	T error = 0.0;
@@ -43,6 +41,7 @@ pair<T,T> next_epoch( pair<T,T> weights, vector<pair<T,T>> points, T learning_ra
 int main( int argc, char** argv ){
 	cout.precision(17);
 	vector<pair<float,float>> points = {
+		/*X    Y*/
 		{1.0, 3.0}, 
 		{3.0, 2.7}, 
 		{7.0, 8.0}, 
