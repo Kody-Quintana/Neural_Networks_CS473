@@ -4,12 +4,33 @@
 #include <utility>
 #include <limits>
 
+
 using namespace std;
+
+template<class T>
+class HyperPlaner{
+	public:
+		HyperPlaner();
+		void train( vector<vector<T>> x_instances, vector<T> y_labels );
+	private:
+		void next_epoch();
+		void linear_error();
+};
+
+
+template<class T>
+void HyperPlaner<T>::train( vector<vector<T>> x_instances, vector<T> y_labels ){
+	if ( x_instances[0].size() != y_labels.size() ) cout << "X and Y must be same size" << endl;
+	T b_gradient = 0;
+	T m_gradient = 0;
+
+
+
 
 template<class T>
 T linear_error( pair<T,T> weights, vector<pair<T,T>> points ){
 	T error = 0.0;
-	for (int i=0; i < points.size(); ++i){
+	for (long unsigned int i=0; i < points.size(); ++i){
 		T const y = points[i].second;
 		T const x = points[i].first;
 		T const b = weights.first;
