@@ -44,6 +44,16 @@ while RMSE >= epsilon
 end
 w
 plot(RMSE_out)
+
+%Pseudo-inverse
+A=X
+A_hat = A'*A; %11x11
+A_hat_inv = inv(A_hat); %11x11
+
+b = y;
+b_hat = A'*b;
+
+w_pinv = A_hat_inv * b_hat
     
     
     
