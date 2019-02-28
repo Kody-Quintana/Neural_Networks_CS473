@@ -1,0 +1,58 @@
+\documentclass[14pt]{article}
+\usepackage{../quintana}
+\begin{document}
+\begin{flushleft}
+ 
+\large
+Kody Quintana\\
+CS 473\\
+Artificial Neural Networks\\
+\today\\
+\boldmath
+
+\begin{center}
+Programming assignment \# 1
+\end{center}
+
+\question
+\textbf{Given:}
+	A system with 10 inputs and 1000 randomly generated instances, $x_i$'s,
+	for each input to give a full input set
+	\[X = [x_1  \ x_2  \ \cdots \ x_{10}]\]
+	where
+	\[x_1 = [x_{1,1} \  x_{2,1}  \ \cdots \  x_{1000,1}]\]
+	and output labels,
+	\[Y = [y_1 \ y_2 \ \cdots \ y_{1000}]\]
+\closequestion
+
+\question
+\textbf{Find:}
+	\begin{enumerate}[label = \textbf{(\alph*)}]
+	\item
+		The hyper-dimensional linear solution to the system
+		utilizing a perceptron model with the above parameters.
+	\item
+		Solve the system with a sigmoid activation function.
+	\item
+		Solve with a pseduo-inverse, $X = \text{inv}(A'A)A'b.$
+	\end{enumerate}
+\closequestion
+
+\question
+\textbf{Hint:}
+	for part \textbf{(b)} remember to normalize your labels between 0 and 1.
+	In fact, it might be wise to one hot encode the label data to values of 0 or 1.
+	You can use the rule
+	\[Y_{\text{\textbf{normalized}}_{i}} = 0
+	\ \text{if} \
+	(Y_i \leq 0.5)\]
+	and 
+	\[Y_{\text{\textbf{normalized}}_{i}} = 1
+	\ \text{if} \
+	(Y_i \geq 0.5)\]
+\closequestion
+
+
+
+\end{flushleft}
+\end{document}
