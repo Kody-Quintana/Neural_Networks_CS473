@@ -3,7 +3,7 @@
 
 #include <vector>
 
-using namespace std;
+using std::vector;
 
 namespace dp{//Create a namespace to allow use of "Dot Product" operator on std::vector
 	template<class T>

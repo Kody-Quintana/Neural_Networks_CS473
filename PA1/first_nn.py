@@ -29,11 +29,27 @@ class NeuralNetwork():
     def train(self, training_set_inputs, training_set_outputs, number_of_training_iterations):
         for iteration in xrange(number_of_training_iterations):
             # Pass the training set through our neural network (a single neuron).
+
             output = self.think(training_set_inputs)
+            # this is self.__sigmoid(dot(inputs, self.synaptic_weights))
+
+
+
+
+
+
+            #print "output is:"
+            #print type(output)
+            #for i in output:
+            #    print i
+
 
             # Calculate the error (The difference between the desired output
             # and the predicted output).
             error = training_set_outputs - output
+            print type(error)
+            for i in error:
+                print i
 
             # Multiply the error by the input and again by the gradient of the Sigmoid curve.
             # This means less confident weights are adjusted more.
