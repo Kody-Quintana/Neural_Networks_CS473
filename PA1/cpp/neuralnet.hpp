@@ -23,6 +23,9 @@ class NeuralNet{
 		T one = 1.0; //Not sure if this is the right way to specify precision
 		vector<T> weights;
 		T learning_rate = 0.0001;
+		T rmse(vector<T> input);
+		vector<T> labels;
+
 };
 
 
@@ -44,7 +47,8 @@ NeuralNet<T>::~NeuralNet(){
 
 
 template<class T>
-void NeuralNet<T>::train(vector<T> inputs, vector<T> labels, int iterations){
+void NeuralNet<T>::train(vector<T> inputs, vector<T> target_labels, int iterations){
+	labels = target_labels;
 
 	//2D X matrix is stored in 1D std::vector
 	int instances = labels.size(); //Number of x instances should always match the number of y label instances
@@ -52,9 +56,42 @@ void NeuralNet<T>::train(vector<T> inputs, vector<T> labels, int iterations){
 	cout << "Number of inputs: " << number_of_inputs << endl;
 	cout << "Number of instances: " << instances << endl;
 
+	//Normalize labels
+	T label_min = labels[0];
+	T label_max = labels[0];
+	for (int i = 1; i < labels.size() ; ++i){
+		label_min = std::min(label_min, labels[i]);
+		label_max = std::max(label_max, labels[i]);
+	}
+	for (int i = 0; i < labels.size() ; ++i){
+		labels[i] = (labels[i] - label_min) / (label_max - label_min);
+	}
+
+	//1 - 0 encode the y labels
+	for (int i = 0; i < labels.size(); ++i){
+		if (labels[i] < 0.5) labels[i] = 0.0;
+		else labels[i] = 1;
+	}
+	cout << "Encoded labels: " << endl;
+	for (auto i : labels){
+		cout << i << endl;
+	}
+
+	//Normalize inputs
+	T inputs_min = inputs[0];
+	T inputs_max = inputs[0];
+	for (int i = 1; i < inputs.size() ; ++i){
+		inputs_min = std::min(inputs_min, inputs[i]);
+		inputs_max = std::max(inputs_max, inputs[i]);
+	}
+	for (int i = 0; i < inputs.size() ; ++i){
+		inputs[i] = (inputs[i] - inputs_min) / (inputs_max - inputs_min);
+	}
+
+
 	//Use of error here is only to adjust weights with higher errors by more than the other weights
-	vector<T> error;
-	error.reserve( labels.size() );
+	//vector<T> error;
+	//error.reserve( labels.size() );
 
 	//One weight per dimension, plus one bias weight
 	weights.reserve( number_of_inputs + 1 );
@@ -84,10 +121,11 @@ void NeuralNet<T>::train(vector<T> inputs, vector<T> labels, int iterations){
 				const T y = labels[instance];
 				
 				//Intercept gradient is the derivative of the cost function with respect to b.
-				b_gradient += -(2.0 / instances) * (y - (m * this_x) + b);
+				b_gradient += activation_derivative( -(2.0 / instances) * (y - ( m * this_x + b ) ));
 
 				//Slope gradient is the derivative of the cost function with respect to m.
-				m_gradient += -(2.0 / instances) * this_x * (y - (m * this_x) + b);
+				m_gradient += activation_derivative(-(2.0 / instances) * (this_x) * (y - ( m * this_x + b) ));
+
 			}//End instances loop
 
 			//Adjust bias weight (b)
@@ -124,3 +162,16 @@ template <class T>
 T NeuralNet<T>::activation_derivative(T input){
 	return input * (one - input);
 }
+
+
+template <class T>
+T NeuralNet<T>::rmse(vector<T> input){
+	T sum = 0.0;
+	for (T error : input ){
+		sum += pow( error, 2 );
+	}
+	return sqrt( sum );
+}
+
+
+
