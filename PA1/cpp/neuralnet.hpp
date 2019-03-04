@@ -3,6 +3,7 @@
 #include <memory>
 #include <array>
 #include <iostream>
+//#include <ios>
 
 using std::vector;
 using std::unique_ptr;
@@ -21,8 +22,14 @@ class NeuralNet{
 		T activation_derivative(T input);
 		T one = 1.0; //Not sure if this is the right way to specify precision
 		vector<T> weights;
-		T learning_rate = 0.001;
+		T learning_rate = 0.0001;
 };
+
+
+
+
+
+
 
 
 template<class T>
@@ -58,11 +65,12 @@ void NeuralNet<T>::train(vector<T> inputs, vector<T> labels, int iterations){
 
 	//This could also be a while RMSE is greater than something loop
 	for (int i = 0; i < iterations; ++i){
+		T temp_bias_adjustment = 0.0;
 
 		//Iterate through each input
 		for (int current_input = 0; current_input < number_of_inputs; ++current_input){
 
-			//Reset gradients between inputs
+			//Reset gradients at start of new input
 			T b_gradient = 0.0;
 			T m_gradient = 0.0;
 
@@ -80,18 +88,22 @@ void NeuralNet<T>::train(vector<T> inputs, vector<T> labels, int iterations){
 
 				//Slope gradient is the derivative of the cost function with respect to m.
 				m_gradient += -(2.0 / instances) * this_x * (y - (m * this_x) + b);
-			}
+			}//End instances loop
 
 			//Adjust bias weight (b)
-			weights[0] -= (learning_rate * b_gradient) / number_of_inputs;
 			//Divide adjustment by number of inputs so each input has equal influnce over the shared bias
+			temp_bias_adjustment -= (learning_rate * b_gradient) / number_of_inputs;
+			//Store this adjustment and only update once per epoch (outermost loop)
 
 			//Adjust slope weight (m)
 			weights[current_input + 1] -= (learning_rate * m_gradient);
-		}
-	}
+
+		}//End inputs loop
+		weights[0] = temp_bias_adjustment;
+
+	}//End epochs loop
 	for (auto i : weights){
-		cout << i << endl;
+		cout << std::fixed << i << endl;
 	}
 }
 

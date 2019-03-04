@@ -24,7 +24,7 @@ int main( int argc, char** argv ){
 
 	unique_ptr<NeuralNet<double>> net( new NeuralNet<double>);
 	//NeuralNet<double>* net = new NeuralNet<double>();
-	net->train(W, X, 1000000);
+	net->train(W, X, 10000);
 	
 	return(0);
 }
