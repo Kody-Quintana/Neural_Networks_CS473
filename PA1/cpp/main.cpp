@@ -18,11 +18,8 @@ int main( int argc, char** argv ){
 
 
 	//Random double generator
-	double lower_bound = 0.0;
-	double upper_bound = 1.0;
-	std::uniform_real_distribution<double> unif(lower_bound,upper_bound);
+	std::uniform_real_distribution<double> unif(/*Lower bound:*/0.0, /*Upper bound:*/1.0);
 	std::default_random_engine re;
-
 
 
 	//Vector of vector pointers to avoid a vector of vectors
@@ -38,7 +35,7 @@ int main( int argc, char** argv ){
 		Inputs.emplace_back(x);
 	}
 
-	//Fill with random doubles, skip first input because its zeros for the bias
+	//Fill with random doubles, skip first input because its ones for the bias
 	for (int i = 1; i < INPUTS_SIZE + 1; ++i){
 		for (int j = 0; j < INSTANCES_SIZE; ++j){
 			Inputs[i]->emplace_back(unif(re));
@@ -62,8 +59,8 @@ int main( int argc, char** argv ){
 	}
 
 
-	//unique_ptr<NeuralNet<double>> net( new NeuralNet<double>);
-	//net->train(Inputs, Y, 10000);
+	unique_ptr<NeuralNet<double>> net( new NeuralNet<double>);
+	net->train(Inputs, Labels );
 	
 	//Clean up inputs
 	for (auto x : Inputs){
