@@ -3,6 +3,7 @@
 #include <cmath>
 #include <memory>
 #include <random>
+#include <chrono>
 
 #include "dotproduct.hpp"
 #include "neuralnet.hpp"
@@ -10,7 +11,7 @@
 #define INSTANCES_SIZE 15
 #define INPUTS_SIZE 10
 
-using namespace dp;
+//using namespace dp;
 using namespace std;
 
 int main( int argc, char** argv ){
@@ -18,8 +19,10 @@ int main( int argc, char** argv ){
 
 
 	//Random double generator
-	std::uniform_real_distribution<double> unif(/*Lower bound:*/0.0, /*Upper bound:*/1.0);
-	std::default_random_engine re;
+	unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+	std::uniform_real_distribution<double> unif(/*Lower bound:*/0.0,   /*Upper bound:*/1.0);
+	//std::default_random_engine re;
+  	std::default_random_engine re (seed);
 
 
 	//Vector of vector pointers to avoid a vector of vectors
@@ -57,10 +60,17 @@ int main( int argc, char** argv ){
 	for (int i = 0; i < INSTANCES_SIZE; ++i){
 		Labels.emplace_back(unif(re));
 	}
+	for(int i = 0; i < Labels.size(); ++i){
+		if (Labels[i] > 0.5) Labels[i] = 1.0;
+		else Labels[i] = 0.0;
+	}
+	for (auto i : Labels){
+		cout << i << endl;
+	}
 
 
 	unique_ptr<NeuralNet<double>> net( new NeuralNet<double>);
-	net->train(Inputs, Labels );
+	net->train( Inputs, Labels );
 	
 	//Clean up inputs
 	for (auto x : Inputs){
