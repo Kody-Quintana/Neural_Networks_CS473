@@ -54,8 +54,14 @@ Programming assignment \# 1
 \closequestion
 
 
+In the main cpp file, random inputs and labels are generated for the neuralnet class.
+The X inputs are stored in an std::vector of pointers to std::vectors of doubles to avoid the memory issues of nested vectors.
+A vector of $1.0$s is added to the beginning of the input vector to be used with the bias.
+
+\textbf{main.cpp}
 \cppfile{cpp/main.cpp}
 
+\textbf{neuralnet.hpp}
 \cppfile{cpp/neuralnet.hpp}
 
 \end{flushleft}

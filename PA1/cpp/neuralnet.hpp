@@ -1,49 +1,31 @@
 #include <cmath>
 #include <vector>
-#include <memory>
-#include <array>
 #include <iostream>
 #include <random>
 #include <chrono>
 
 #include "dotproduct.hpp"
 
-using std::vector;
-using std::unique_ptr;
-using std::cout;
-using std::endl;
-
-
-
+using std::vector, std::cout,  std::endl;
 
 template<class T>
 class NeuralNet{
 	public:
-	//	NeuralNet();
-	//	~NeuralNet();
 		void train( vector<vector<T>*> Inputs, vector<T> Labels );
 	private:
 		vector< vector<T>* > Inputs;
 		vector<T> Labels;
 		vector<T> Weights;
 		vector<T> weights_change;
-		T y_hat(int instance);
+
 		T y_hat_with_act(int instance);
 		T W_gradient_with_act(int input);
 		T weights_rmse();
+
 		T epsilon = 0.00001;
 		T learning_rate = 0.001;
 };
 
-
-//Use for prediction (not used)
-template<class T>
-T NeuralNet<T>::y_hat(int instance){
-	T y_hat_value = 0.0;
-	for (int i = 0; i < Weights.size(); ++i)
-		y_hat_value += Weights[i] * (*Inputs[i])[instance];
-	return y_hat_value;
-}
 
 
 //Use for classification
@@ -57,7 +39,6 @@ T NeuralNet<T>::y_hat_with_act(int instance){
 }
 
 
-
 template<class T>
 T NeuralNet<T>::W_gradient_with_act(int input){
 	T adjustment = 0.0;
@@ -67,11 +48,10 @@ T NeuralNet<T>::W_gradient_with_act(int input){
 	for (int i = 0; i < N; ++i){
 		activated_sum = y_hat_with_act(i);
 		error_with_act = (Labels[i] - activated_sum);
-		adjustment += (-1.0 / N) * (error_with_act) * (activated_sum * (1.0 - activated_sum)) * (*Inputs[input])[i];
+		adjustment += (error_with_act) * (activated_sum * (1.0 - activated_sum)) * (*Inputs[input])[i];
 	}
-	return adjustment;
+	return (-1.0 / N) * adjustment;
 }
-
 
 
 template<class T>
@@ -86,15 +66,12 @@ T NeuralNet<T>::weights_rmse(){
 }
 
 
-
-
 template<class T>
 void NeuralNet<T>::train( vector<vector<T>* > arg_inputs, vector<T> arg_labels ){
 	Inputs = arg_inputs;
 	Labels = arg_labels;
 
-
-	//Initialize error of weights with very high number for first iteration
+	//Initialize delta of weights vector
 	weights_change.reserve(Inputs.size());
 	for (int i = 0; i < Inputs.size(); ++i){
 		weights_change.emplace_back( 1.0 );
@@ -102,7 +79,8 @@ void NeuralNet<T>::train( vector<vector<T>* > arg_inputs, vector<T> arg_labels )
 
 	//Initialize Weights with random values
 	Weights.reserve(Inputs.size());
-	std::uniform_real_distribution<double> unif(0.1, 1.0);
+	//Random weights only work in this range, anything more breaks the model
+	std::uniform_real_distribution<double> unif(-1.0, 1.0);
 
 	unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
   	std::default_random_engine re (seed);
@@ -129,6 +107,3 @@ void NeuralNet<T>::train( vector<vector<T>* > arg_inputs, vector<T> arg_labels )
 		cout << final_weight << endl;
 	}
 }
-
-
-
