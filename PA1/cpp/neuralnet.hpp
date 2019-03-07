@@ -29,8 +29,6 @@ class NeuralNet{
 		vector<T> weights_change;
 		T y_hat(int instance);
 		T y_hat_with_act(int instance);
-		T error(int instance);
-		T error_with_act(int instance);
 		T W_gradient_with_act(int input);
 		T weights_rmse();
 		T epsilon = 0.00001;
@@ -38,10 +36,7 @@ class NeuralNet{
 };
 
 
-
-
-
-//Use for prediction
+//Use for prediction (not used)
 template<class T>
 T NeuralNet<T>::y_hat(int instance){
 	T y_hat_value = 0.0;
@@ -49,9 +44,6 @@ T NeuralNet<T>::y_hat(int instance){
 		y_hat_value += Weights[i] * (*Inputs[i])[instance];
 	return y_hat_value;
 }
-
-
-
 
 
 //Use for classification
@@ -63,21 +55,6 @@ T NeuralNet<T>::y_hat_with_act(int instance){
 	}
 	return 1.0 / (1.0 + exp( -y_hat_value ));
 }
-
-
-
-template<class T>
-T NeuralNet<T>::error(int instance){
-	return (Labels[instance] - y_hat(instance));
-}
-
-
-
-template<class T>
-T NeuralNet<T>::error_with_act(int instance){
-	return (Labels[instance] - y_hat_with_act(instance));
-}
-
 
 
 
@@ -94,12 +71,6 @@ T NeuralNet<T>::W_gradient_with_act(int input){
 	}
 	return adjustment;
 }
-
-
-
-
-
-
 
 
 
@@ -143,7 +114,7 @@ void NeuralNet<T>::train( vector<vector<T>* > arg_inputs, vector<T> arg_labels )
 	while (rmse > epsilon){
 	//for (int iteration = 0; iteration < 50; ++iteration){
 		rmse = weights_rmse();
-		cout << "RMSE: " << std::fixed << rmse << endl;
+		cout << "RMSE: " << std::fixed << rmse << "\r" << std::flush;
 		//Update weights here
 		for (int i = 0; i < Inputs.size(); ++i){
 

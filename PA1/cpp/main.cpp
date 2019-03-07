@@ -5,18 +5,14 @@
 #include <random>
 #include <chrono>
 
-#include "dotproduct.hpp"
 #include "neuralnet.hpp"
 
-#define INSTANCES_SIZE 15
+#define INSTANCES_SIZE 1000
 #define INPUTS_SIZE 10
 
-//using namespace dp;
-using namespace std;
+using std::vector, std::cout, std::endl, std::unique_ptr;
 
 int main( int argc, char** argv ){
-
-
 
 	//Random double generator
 	unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
@@ -45,16 +41,7 @@ int main( int argc, char** argv ){
 		}
 	}
 
-
-	//Test print
-	for (int i = 0; i < Inputs.size(); ++i){
-		cout << "\n\nINPUT# " << i << "\n";
-		for (int j = 0; j < Inputs[0]->size(); ++j){
-			cout << (*Inputs[i])[j] << endl;
-		}
-	}
-
-	//Generate labels
+	//Generate labels and encode to 1 or 0
 	vector<double> Labels;
 	Labels.reserve(INSTANCES_SIZE);
 	for (int i = 0; i < INSTANCES_SIZE; ++i){
@@ -63,9 +50,6 @@ int main( int argc, char** argv ){
 	for(int i = 0; i < Labels.size(); ++i){
 		if (Labels[i] > 0.5) Labels[i] = 1.0;
 		else Labels[i] = 0.0;
-	}
-	for (auto i : Labels){
-		cout << i << endl;
 	}
 
 
