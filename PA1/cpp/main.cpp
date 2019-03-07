@@ -52,6 +52,7 @@ int main( int argc, char** argv ){
 
 	unique_ptr<NeuralNet<double>> net( new NeuralNet<double>);
 	net->train( Inputs, Labels );
+	net->think( Inputs );
 	
 	//Clean up inputs
 	for (auto x : Inputs){

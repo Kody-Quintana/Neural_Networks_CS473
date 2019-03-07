@@ -12,6 +12,7 @@ template<class T>
 class NeuralNet{
 	public:
 		void train( vector<vector<T>*> Inputs, vector<T> Labels );
+		void think( vector<vector<T>*> Inputs);
 	private:
 		vector< vector<T>* > Inputs;
 		vector<T> Labels;
@@ -107,3 +108,19 @@ void NeuralNet<T>::train( vector<vector<T>* > arg_inputs, vector<T> arg_labels )
 		cout << final_weight << endl;
 	}
 }
+
+
+
+template<class T>
+void NeuralNet<T>::think( vector<vector<T>*> Inputs){
+	for (int instance = 0; instance < Inputs[0]->size(); ++instance){
+		T y_hat_value = 0.0;
+		for (int i = 0; i < Weights.size(); ++i){
+			y_hat_value += Weights[i] * (*Inputs[i])[instance];
+		}
+	cout <<  1.0 / (1.0 + exp( -y_hat_value )) << endl;
+	}
+}
+
+
+
