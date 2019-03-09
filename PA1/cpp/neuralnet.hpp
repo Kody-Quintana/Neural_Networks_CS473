@@ -1,8 +1,10 @@
 #include <cmath>
 #include <vector>
 #include <iostream>
+#include <fstream>
 #include <random>
 #include <chrono>
+#include <string>
 
 #include "dotproduct.hpp"
 
@@ -12,7 +14,7 @@ template<class T>
 class NeuralNet{
 	public:
 		void train( vector<vector<T>*> Inputs, vector<T> Labels );
-		void think( vector<vector<T>*> Inputs);
+		void think( vector<vector<T>*> Inputs, std::string file_path );
 	private:
 		vector< vector<T>* > Inputs;
 		vector<T> Labels;
@@ -69,6 +71,7 @@ T NeuralNet<T>::weights_rmse(){
 
 template<class T>
 void NeuralNet<T>::train( vector<vector<T>* > arg_inputs, vector<T> arg_labels ){
+	int iteration = 0;
 	Inputs = arg_inputs;
 	Labels = arg_labels;
 
@@ -91,9 +94,9 @@ void NeuralNet<T>::train( vector<vector<T>* > arg_inputs, vector<T> arg_labels )
 
 	T rmse = std::numeric_limits<T>::max();
 	while (rmse > epsilon){
+		++iteration;
 	//for (int iteration = 0; iteration < 50; ++iteration){
-		rmse = weights_rmse();
-		cout << "RMSE: " << std::fixed << rmse << "\r" << std::flush;
+
 		//Update weights here
 		for (int i = 0; i < Inputs.size(); ++i){
 
@@ -101,6 +104,8 @@ void NeuralNet<T>::train( vector<vector<T>* > arg_inputs, vector<T> arg_labels )
 			weights_change[i] = Weights[i] - W_i_new;
 			Weights[i] = W_i_new;
 		}
+		rmse = weights_rmse();
+		cout << " RMSE: " << std::fixed << rmse << " Iterations: " << iteration << "\r" << std::flush;
 	}
 
 	cout << "\n";
@@ -112,15 +117,15 @@ void NeuralNet<T>::train( vector<vector<T>* > arg_inputs, vector<T> arg_labels )
 
 
 template<class T>
-void NeuralNet<T>::think( vector<vector<T>*> Inputs){
+void NeuralNet<T>::think( vector<vector<T>*> Inputs, std::string file_path ){
+	std::ofstream output;
+	output.open( file_path );
 	for (int instance = 0; instance < Inputs[0]->size(); ++instance){
 		T y_hat_value = 0.0;
 		for (int i = 0; i < Weights.size(); ++i){
 			y_hat_value += Weights[i] * (*Inputs[i])[instance];
 		}
-	cout <<  1.0 / (1.0 + exp( -y_hat_value )) << endl;
+		output <<  1.0 / (1.0 + exp( -y_hat_value )) << endl;
 	}
+	output.close();
 }
-
-
-
