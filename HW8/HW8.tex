@@ -1,0 +1,34 @@
+\documentclass[14pt]{article}
+\usepackage{../quintana}
+\begin{document}
+\begin{flushleft}
+ 
+\large
+Kody Quintana\\
+CS 473\\
+Artificial Neural Networks\\
+\today\\
+\boldmath
+
+\begin{center}
+Assignment \#8
+\end{center}
+
+\question
+\textbf{Given:}
+	Quiz problem \# 2:
+
+\textbf{Find:}
+	Write Matlab/Python/C/C++ code to implement the forward propagation of the ANN. Calculate $W$'s and $\hat{\vec{y}}$.
+
+\[\vec{X} = [x_0 \ x_1  \ x_2]^T = [1.0 \ 0.7 \ 0.3]^T\]
+
+\[\vec{y} = [y_0] = 1.0\]
+
+\closequestion
+
+This class takes the number of nodes per layer as arguments for its constructor.
+It generates random weight matrices and 0 filled nodes (not sure if creating the empty nodes is actually necessary in python)
+\pythonfile{py/neural_nodes.py}
+\end{flushleft}
+\end{document}
