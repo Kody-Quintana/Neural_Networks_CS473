@@ -8,7 +8,7 @@
 
 #include "dotproduct.hpp"
 
-using std::vector, std::cout,  std::endl;
+using std::vector, std::cout, std::endl;
 
 template<class T>
 class NeuralNet{
@@ -99,7 +99,6 @@ void NeuralNet<T>::train( vector<vector<T>* > arg_inputs, vector<T> arg_labels )
 
 		//Update weights here
 		for (int i = 0; i < Inputs.size(); ++i){
-
 			T W_i_new = Weights[i] - (learning_rate * W_gradient_with_act(i));
 			weights_change[i] = Weights[i] - W_i_new;
 			Weights[i] = W_i_new;
