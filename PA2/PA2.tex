@@ -1,0 +1,51 @@
+\documentclass[14pt]{article}
+\usepackage{../quintana}
+\begin{document}
+\begin{flushleft}
+ 
+\large
+Kody Quintana\\
+CS 473\\
+Artificial Neural Networks\\
+\today\\
+\boldmath
+
+\begin{center}
+Final Project
+\end{center}
+
+\question
+\textbf{Given:}
+	A system with 3 inputs and 1000 randomly generted instances, $x_i$'s
+	for each input to give a full input set
+	\[X = [x_0, x_1, x_2] \]
+	where
+	\[x_1 = [x_0, x_1, x_3, \ldots x_{999}, 1]\]
+	$x_2$ and $x_3$ are similar.
+	A hidden layer of four nodes
+	\[h = [h_0, h_1, h_2, h_3]\]
+	and output labels
+	\[Y_0 = y_0, y_1, \ldots y_{999}\]
+	\[Y_1 = y_0, y_1, \ldots y_{999}\]
+	
+\textbf{Find:}
+	\begin{enumerate}
+	\item The hyper-dimensional linear solution to the system utilizing a single hidden layer model with forward and backward propagation with the above parameters
+		utilizing a sigmoid activation function.
+	\item Discuss your final weight matrices, $W_{hi}$, and $W_{oh}$.
+	\item Plot the MSE as a function of epochs.
+	\end{enumerate}
+
+\textbf{Hint:}
+	for part b remember to normalize your labels between $0$ and $1$.
+	In fact, it might be wise to one hot encode the label data to values of $0$ or $1$.
+\closequestion
+
+\question
+\textbf{Extra Credit: (50 pts.)}
+	Solve the above problem with an additional hidden layer, $h_2$ with the three hidden nodes.
+\closequestion
+		
+
+\end{flushleft}
+\end{document}
