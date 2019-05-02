@@ -25,6 +25,15 @@ NN_Node::NN_Node(int this_layer, int this_node, int next_size, int prev_size) :
 		  )
 {
 	//Constructor body
+	cout
+		<< "Node in layer: "
+		<< this_layer
+		<< " at position: "
+		<< this_node
+		<< " next_p: "
+		<< next_size
+		<< " prev_p: "
+		<< prev_size << endl;
 }
 
 
@@ -60,7 +69,7 @@ NodeVector::NodeVector(vector<int> layer_sizes) :
 			n_ind.reserve(layers);
 			int start = 0;
 			for (int layer = 0; layer < layers; ++layer){
-				n_ind.emplace_back( make_pair(start, start + layer_sizes[layer]-1) );
+				n_ind.emplace_back( make_pair(start, start + layer_sizes[layer]-0) );
 				start += layer_sizes[layer]+1;
 			}
 			cout << "n_indices:\n";
@@ -74,11 +83,11 @@ NodeVector::NodeVector(vector<int> layer_sizes) :
 			n_ind_b.reserve(layers);
 			int start = 0;
 			for (int layer = 0; layer < layers-1; ++layer){
-				n_ind_b.emplace_back( make_pair(start, start + layer_sizes[layer]-0) );
+				n_ind_b.emplace_back( make_pair(start, start + layer_sizes[layer]+1) );
 				start += layer_sizes[layer]+1;
 			}
 			//There is no bias node on last layer:
-			n_ind_b.emplace_back( make_pair(start, start + layer_sizes[layers-1]-1) );
+			n_ind_b.emplace_back( make_pair(start, start + layer_sizes[layers-1]) );
 			cout << "n_indices_bias:\n";
 			for (auto i : n_ind_b) { cout << i.first << "-" << i.second << endl;}
 			return n_ind_b;
@@ -88,7 +97,6 @@ NodeVector::NodeVector(vector<int> layer_sizes) :
 	Nodes( [&]()->vector<NN_Node> {
 			vector<NN_Node> node_vec;
 			node_vec.reserve(full_size);
-			return node_vec;
 			for (int layer = 0; layer < layers; ++layer){
 				int node_pos = 0;
 				for (int start = n_indices_bias[layer].first; start < n_indices_bias[layer].second; ++start){
@@ -96,12 +104,13 @@ NodeVector::NodeVector(vector<int> layer_sizes) :
 						NN_Node({
 							layer,
 							node_pos++, 
-							(layer + 1 < layers) ? n_per_layer_bias[layers+1] : 0,
-							(layer - 1 >= 0) ? n_per_layer[layer-1] : 0
+							(layer + 1 < layers) ? n_per_layer[layer+1] : 0,
+							(layer - 1 >= 0) ? n_per_layer_bias[layer-1] : 0
 						})
 					);
 				}
 			}
+			return node_vec;
 			}()
 	     )
 {
