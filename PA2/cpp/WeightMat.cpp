@@ -41,9 +41,9 @@ WeightMatrix::WeightMatrix( std::vector<int> sizes ) :
 		//Fill with random between 0 and 1
 		std::generate_n(std::back_inserter(rw), full_length,
 			[]() -> double{ 
-				static double debug = 0.0;
-				return debug++;
-				//return rand() * (1.0/RAND_MAX); 
+				//static double debug = 0.0;
+				//return debug++;
+				return rand() * (1.0/RAND_MAX); 
 			}
 		);
 		//for (auto i : rw ){ cout << i << endl; };

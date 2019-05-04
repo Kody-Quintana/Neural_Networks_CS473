@@ -96,6 +96,16 @@ NodeVector::NodeVector(vector<int> layer_sizes) :
 			}()
 		),
 
+	possible_path_size( [&]()->int{
+			int result = 1;
+			for (long unsigned int i = 1; i < n_per_layer_bias.size(); ++i){
+				result *= n_per_layer_bias[i];
+			}
+			return result;
+			}()
+		),
+				
+
 	Nodes( [&]()->vector<NN_Node> {
 			vector<NN_Node> node_vec;
 			node_vec.reserve(full_size);
@@ -137,15 +147,4 @@ void NodeVector::set_connectivity(){
 			}
 		}
 	}
-//	for (auto const &node : Nodes){
-//		cout << "\n";
-//		cout << "Node at layer: " << node.layer << " pos: " << node.l_node;
-//		cout << " has " << endl;
-//		for (auto const &nn : node.next_paths){
-//			cout << "    -► Next node at layer: " << nn->layer << " pos: " << nn->l_node << endl;
-//		}
-//		for (auto const &pn : node.prev_paths){
-//			cout << "   ◄-  Prev node at layer: " << pn->layer << " pos: " << pn->l_node << endl;
-//		}
-//	}
 }

@@ -34,6 +34,7 @@ class NodeVector{
 		const int full_size; //Total number of nodes
 		const vector<Range> n_indices; //Ranges for each layer, not including the bias node
 		const vector<Range> n_indices_bias; //Ranges for each layer, with the bias nodes
+		const int possible_path_size;
 		vector<NN_Node> Nodes; //Single vector of all nodes from all layers
 		void set_connectivity(); //Hard-coded to full connectivity
 	public:
