@@ -137,15 +137,15 @@ void NodeVector::set_connectivity(){
 			}
 		}
 	}
-	for (auto const &node : Nodes){
-		cout << "\n";
-		cout << "Node at layer: " << node.layer << " pos: " << node.l_node;
-		cout << " has " << endl;
-		for (auto const &nn : node.next_paths){
-			cout << "    -► Next node at layer: " << nn->layer << " pos: " << nn->l_node << endl;
-		}
-		for (auto const &pn : node.prev_paths){
-			cout << "   ◄-  Prev node at layer: " << pn->layer << " pos: " << pn->l_node << endl;
-		}
-	}
+//	for (auto const &node : Nodes){
+//		cout << "\n";
+//		cout << "Node at layer: " << node.layer << " pos: " << node.l_node;
+//		cout << " has " << endl;
+//		for (auto const &nn : node.next_paths){
+//			cout << "    -► Next node at layer: " << nn->layer << " pos: " << nn->l_node << endl;
+//		}
+//		for (auto const &pn : node.prev_paths){
+//			cout << "   ◄-  Prev node at layer: " << pn->layer << " pos: " << pn->l_node << endl;
+//		}
+//	}
 }
