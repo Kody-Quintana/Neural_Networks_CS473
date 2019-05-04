@@ -1,8 +1,9 @@
+#include "WeightMat.hpp"
+
 #include <iostream>
 #include <vector>
 #include <algorithm>
 #include <random>
-#include "WeightMat.hpp"
 
 using namespace std;
 
@@ -18,17 +19,18 @@ WeightMatrix::WeightMatrix( std::vector<int> sizes ) :
 	L( [&]() -> std::vector<int> {
 		std::vector<int> t(layers-1, 0);
 		for (int i = 1; i < layers-1; ++i){
-			int this_calc = layer_sizes[i-1]*layer_sizes[i];
+			int this_mat_size = layer_sizes[i-1]*layer_sizes[i];
 			for (int j = i; j < layers-1; ++j){
-				t[j] += this_calc;
+				t[j] += this_mat_size;
 			};
 		};
-		cout << "L\n";
-		for (auto i : t){ cout << i << endl;};
+		cout << "Weight L offsets:\n";
+		for (auto i : t){ cout << "  " << i << endl;};
 		return t; //Initializes const L to this t.
 		}()
 
 	),//W is all weights stored in a single vector
+
 	W( [&]() -> std::vector<double> {
 		int full_length = 0;
 		for (int i = 1; i < layers; ++i){
@@ -52,8 +54,12 @@ WeightMatrix::WeightMatrix( std::vector<int> sizes ) :
 		//Constructor body
 	}
 
-double& WeightMatrix::at(int a, int b, int c){
-	return W[ L[a] + layer_sizes[a]*b + c];
+
+double& WeightMatrix::operator()(int a, int b, int c){
+	//a-1 because forward propigation starts at layer 1
+	//and looks "back" to sum nodes
+	//WeightMatrix(0,X,X) should never be called
+	return W[ L[a-1] + layer_sizes[a-1]*b + c];
 }
 
 void WeightMatrix::print_all(){

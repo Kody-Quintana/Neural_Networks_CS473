@@ -14,7 +14,7 @@ class WeightMatrix{
 		std::vector<double> W;
 	public:
 		WeightMatrix( std::vector<int> sizes );
-		double& at(int a, int b, int c);
+		double& operator()(int a, int b, int c);
 		void print_all();
 };
 #endif

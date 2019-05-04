@@ -1,8 +1,10 @@
-#include <iostream>
-#include <vector>
 #include "NodeVec.hpp"
 
+#include <iostream>
+#include <vector>
+
 using namespace std;
+
 
 NN_Node::NN_Node(int this_layer, int this_node, int next_size, int prev_size) :
 
@@ -99,12 +101,12 @@ NodeVector::NodeVector(vector<int> layer_sizes) :
 			node_vec.reserve(full_size);
 			for (int layer = 0; layer < layers; ++layer){
 				int node_pos = 0;
-				for (int start = n_indices_bias[layer].first; start < n_indices_bias[layer].second; ++start){
+				for (int n_count = n_indices_bias[layer].first; n_count < n_indices_bias[layer].second; ++n_count){
 					node_vec.emplace_back(
 						NN_Node({
 							layer,
 							node_pos++, 
-							(layer + 1 < layers) ? n_per_layer[layer+1] : 0,
+							(layer + 1 < layers) ? n_per_layer_bias[layer+1] : 0,
 							(layer - 1 >= 0) ? n_per_layer_bias[layer-1] : 0
 						})
 					);
@@ -115,4 +117,35 @@ NodeVector::NodeVector(vector<int> layer_sizes) :
 	     )
 {
 	//Constructor body
+	set_connectivity();
+}
+
+
+//This has unnessesary complexity but would be the general form if you didn't actually want full connectivity.
+void NodeVector::set_connectivity(){
+	for (int layer = 0; layer < layers; ++layer){
+		for (int node = n_indices_bias[layer].first; node < n_indices_bias[layer].second; ++node){
+			if (layer > 0){
+				for (int p_node = n_indices_bias[layer-1].first; p_node < n_indices_bias[layer-1].second; ++p_node){
+					Nodes[node].prev_paths.push_back( &Nodes[p_node] );
+				}
+			}
+			if (layer < layers-1){
+				for (int n_node = n_indices_bias[layer+1].first; n_node < n_indices_bias[layer+1].second; ++n_node){
+					Nodes[node].next_paths.push_back( &Nodes[n_node] );
+				}
+			}
+		}
+	}
+	for (auto const &node : Nodes){
+		cout << "\n";
+		cout << "Node at layer: " << node.layer << " pos: " << node.l_node;
+		cout << " has " << endl;
+		for (auto const &nn : node.next_paths){
+			cout << "    -► Next node at layer: " << nn->layer << " pos: " << nn->l_node << endl;
+		}
+		for (auto const &pn : node.prev_paths){
+			cout << "   ◄-  Prev node at layer: " << pn->layer << " pos: " << pn->l_node << endl;
+		}
+	}
 }
