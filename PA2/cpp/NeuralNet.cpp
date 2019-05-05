@@ -59,62 +59,61 @@ void NeuralNet::backward_prop(){
 	for (int layer = 0; layer < NV.layers; ++layer){
 		for (int node = NV.n_indices_bias[layer].first; node < NV.n_indices_bias[layer].second; ++node){
 			for (auto const &nn : NV.Nodes[node].next_paths){
-				cout << "    -► Next node at layer: " << nn->layer << ", pos: " << nn->l_node;
+				cout << "Starting back prop to node at layer: " << nn->layer << ", pos: " << nn->l_node;
 				cout << ", through W: " << W.index(nn->layer, nn->l_node, NV.Nodes[node].l_node) << endl;
-				vector<Gradient> path_storage;
-				path_storage.reserve(NV.possible_path_size);
-				path_storage.emplace_back(Gradient(
+				vector<Gradient> branch_storage;
+				branch_storage.reserve(NV.possible_path_size);
+				branch_storage.emplace_back(Gradient(
 							nn->layer,
 							nn->l_node,
 							(NV.Nodes[node].value * dx_activation(nn->value)),
 							&nn->next_paths)
 							);
-				long unsigned int st_index = 0;
-				while (st_index < path_storage.size()){
-					if (path_storage[st_index].next_paths->size() > 1){
-						//When traversing towards the output, here the partial derivative has more then one branch
+				long unsigned int bs_index = 0;
+				while (bs_index < branch_storage.size()){
+					if (branch_storage[bs_index].next_paths->size() > 1){
+						//When traversing towards the output, here the partial derivative has more than one branch.
 						//To account for each branch, the current derivative is copied for each possible next step
 						//Each copy is assigned one of the possible forward paths
-						//During this assignment the copy's gradient is updated with the partial from
-						//its current node to its assigned node.
-						//This movement has two components:
+						//During this assignment the copy's gradient is updated 
+						//with the partial from its current node to its assigned node.
+						//This movement has two parts multiplied with the chain rule
 						// 1) the weight between each node
-						// 2) the d/dx of the assigned node's activation
-						for (long unsigned int n = 1; n < path_storage[st_index].next_paths->size(); ++n){
-							path_storage.emplace_back(path_storage[st_index]);
-							path_storage.back().next_paths = &(*path_storage[st_index].next_paths)[n]->next_paths;
-							path_storage.back().value *= (
+						// 2) the d/dx of the assigned node's activation function
+						for (long unsigned int n = 1; n < branch_storage[bs_index].next_paths->size(); ++n){
+							branch_storage.emplace_back(branch_storage[bs_index]);
+							branch_storage.back().next_paths = &(*branch_storage[bs_index].next_paths) [n]->next_paths;
+							branch_storage.back().value *= (
 								W(
-									(*path_storage[st_index].next_paths)[n]->layer,
-									(*path_storage[st_index].next_paths)[n]->l_node,
-									path_storage[st_index].current_node_pos
-								) * dx_activation( (*path_storage[st_index].next_paths)[n]->value )
+									(*branch_storage[bs_index].next_paths) [n]->layer,
+									(*branch_storage[bs_index].next_paths) [n]->l_node,
+									branch_storage[bs_index].current_node_pos
+								) * dx_activation( (*branch_storage[bs_index].next_paths)[n]->value )
 							);
-							//cout << "L" << 
 						}
-						Gradient temp = path_storage[st_index];
-						temp.next_paths = &(*path_storage[st_index].next_paths)[0]->next_paths;
+						Gradient temp = branch_storage[bs_index];
+						temp.next_paths = &(*branch_storage[bs_index].next_paths) [0]->next_paths;
 						temp.value *= (
 							W(
-								(*path_storage[st_index].next_paths)[0]->layer,
-								(*path_storage[st_index].next_paths)[0]->l_node,
-								path_storage[st_index].current_node_pos
-							) * dx_activation( (*path_storage[st_index].next_paths)[0]->value )
+								(*branch_storage[bs_index].next_paths) [0]->layer,
+								(*branch_storage[bs_index].next_paths) [0]->l_node,
+								branch_storage[bs_index].current_node_pos
+							) * dx_activation( (*branch_storage[bs_index].next_paths)[0]->value )
 						);
-						path_storage[st_index] = temp;
+						branch_storage[bs_index] = temp;
 					}
-					else if (path_storage[st_index].next_paths->size() == 1){
+					else if (branch_storage[bs_index].next_paths->size() == 1){
 						//Similar to above, this case handles when there is only one possible path moving forward
-						Gradient temp = path_storage[st_index];
-						temp.next_paths = &(*path_storage[st_index].next_paths)[0]->next_paths;
+						Gradient temp = branch_storage[bs_index];
+						temp.next_paths = &(*branch_storage[bs_index].next_paths)[0]->next_paths;
 						temp.value *= (
 							W(
-								(*path_storage[st_index].next_paths)[0]->layer,
-								(*path_storage[st_index].next_paths)[0]->l_node,
-								path_storage[st_index].current_node_pos
-							) * dx_activation( (*path_storage[st_index].next_paths)[0]->value )
+								(*branch_storage[bs_index].next_paths)[0]->layer,
+								(*branch_storage[bs_index].next_paths)[0]->l_node,
+								branch_storage[bs_index].current_node_pos
+							) * dx_activation( (*branch_storage[bs_index].next_paths)[0]->value )
 						);
-						path_storage[st_index] = temp;
+						branch_storage[bs_index] = temp;
 					}
 					else{
 						//Finally this branch has reached an output node and there is no more
@@ -122,19 +121,26 @@ void NeuralNet::backward_prop(){
 						//the last d/dx which is the partial of this output node with respect to
 						//the total Error
 						//Note: at this point only this single branch has completed its traversal,
-						//now the path_storage index will be incremented and the next branch will
+						//now the branch_storage index will be incremented and the next branch will
 						//continue traversing until an output node is reached
 						//Once all branches have finished they will be summed to create the gradient
-						st_index += 1;
+
 						//TODO add the final error d/dx here
-						path_storage[st_index].value *= -0.5;
+						branch_storage[bs_index].value *= -0.5;
+
+						++bs_index;
 					}
 				}
 				//End while
-				double branch_sum = std::accumulate(begin(path_storage), end(path_storage), 0.0,
-						[](double i, const Gradient& grad) {return grad.value + i; }
+				double branch_sum = std::accumulate(begin(branch_storage), end(branch_storage), 0.0,
+						[](double incoming, const Gradient& grad) {return grad.value + incoming; }
 						);
-				cout << "Branch sum: " << std::scientific << branch_sum << endl;
+				//cout << "Branch sum: " << std::scientific << branch_sum << endl;
+				cout << "  Updating W:" << W.index(nn->layer, nn->l_node, NV.Nodes[node].l_node) << endl;
+				cout << "    from: " << W(nn->layer, nn->l_node, NV.Nodes[node].l_node) << endl;
+				W(nn->layer, nn->l_node, NV.Nodes[node].l_node) += (learning_rate * branch_sum);
+				cout << "      to: " << W(nn->layer, nn->l_node, NV.Nodes[node].l_node) << endl;
+
 			}
 		}
 	}

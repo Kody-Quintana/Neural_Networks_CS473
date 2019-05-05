@@ -46,20 +46,49 @@ Final Project
 \textbf{Extra Credit: (50 pts.)}
 	Solve the above problem with an additional hidden layer, $h_2$ with the three hidden nodes.
 \closequestion
-		
+
+\newpage
+%\setlength\parindent{24pt}
+This implementation supports a neural network of any number of layers and any number of nodes per layer.
+It's layout is stored as a multi-linked list.		
+This structure is probably less performant because of all the required pointer dereferencing,
+but it is the most simple way I could think of to implement generalized back-propagation.
+
+The neural network consists of 3 major components:
+\begin{enumerate}
+	\item Weight Matrix class - this class is a functor that stores all of the weights in contigious memory.
+		Each weight is accessed with 3 arguments:
+		the layer, the current node within this layer, and the previous node in the previous layer.
+	\item Node Vector class - this class stores a node struct called NN\_Node in contigious memory
+		for each node of the neural network. The range of nodes per layer is stored in a vector.
+	\item Neural Network class - this class contains the previous two classes as members.
+		Most of the logic of the neural network is done by this class's methods.
+\end{enumerate}
+
 	\textbf{WeightMat.hpp}
 	\cppfile{cpp/WeightMat.hpp}
 
 	\textbf{WeightMat.cpp}
 	\cppfile{cpp/WeightMat.cpp}
 
+
 	\newpage
 	\textbf{NodeVec.hpp}
 	\cppfile{cpp/NodeVec.hpp}
 
-	\textbf{NodeVec.hpp}
-	\cppfile{cpp/NodeVec.hpp}
+	\textbf{NodeVec.cpp}
+	\cppfile{cpp/NodeVec.cpp}
 
+
+	\newpage
+	\textbf{NeuralNet.hpp}
+	\cppfile{cpp/NeuralNet.hpp}
+
+	\textbf{NeuralNet.cpp}
+	\cppfile{cpp/NeuralNet.cpp}
+
+
+	\newpage
 	\textbf{main.cpp}
 	\cppfile{cpp/main.cpp}
 

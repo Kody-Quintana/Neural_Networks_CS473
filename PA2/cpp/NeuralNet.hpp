@@ -1,5 +1,5 @@
-#ifndef NEURALNET
-#define NEURALNET
+#ifndef KNEURALNET
+#define KNEURALNET
 
 #include "NodeVec.hpp"
 #include "WeightMat.hpp"
@@ -15,7 +15,6 @@ struct Gradient{
 	int current_node_pos;
 	vector<NN_Node*>* next_paths;
 	Gradient(int layer, int node, double start_value, vector<NN_Node*>* ready_next);
-	void stage_next(vector<NN_Node*>* next_paths);
 };
 
 class NeuralNet{
@@ -33,5 +32,6 @@ class NeuralNet{
 
 		vector<double> error;
 		double total_error = 0.0;
+		double learning_rate = 0.01;
 };
 #endif

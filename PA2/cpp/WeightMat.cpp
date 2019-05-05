@@ -29,8 +29,9 @@ WeightMatrix::WeightMatrix( std::vector<int> sizes ) :
 		return t; //Initializes const L to this t.
 		}()
 
-	),//W is all weights stored in a single vector
+	),
 
+	//W is all weights stored in a single vector
 	W( [&]() -> std::vector<double> {
 		int full_length = 0;
 		for (int i = 1; i < layers; ++i){
