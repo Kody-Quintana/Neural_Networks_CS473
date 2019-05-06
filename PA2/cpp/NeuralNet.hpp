@@ -30,13 +30,19 @@ class NeuralNet{
 		void forward_prop();
 		void backward_prop();
 
-		void stage_inputs();
+		void stage_inputs_and_labels(); //Set first layer node values to this instance of inputs
 		void stage_labels();
 
+		int instance_index = 0;
 		vector<double>& labels;
 		vector<double>& inputs;
+
 		vector<double> error;
-		double total_error = 0.0;
-		double learning_rate = 0.01;
+		vector<double> instance_label;
+
+		double rmse;
+		double learning_rate = 0.0001;
+
+		void train();
 };
 #endif

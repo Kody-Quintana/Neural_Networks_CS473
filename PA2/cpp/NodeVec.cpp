@@ -27,15 +27,15 @@ NN_Node::NN_Node(int this_layer, int this_node, int next_size, int prev_size) :
 		  )
 {
 	//Constructor body
-	cout
-		<< "Node in layer: "
-		<< this_layer
-		<< " at position: "
-		<< this_node
-		<< " next_p: "
-		<< next_size
-		<< " prev_p: "
-		<< prev_size << endl;
+	//cout
+	//	<< "Node in layer: "
+	//	<< this_layer
+	//	<< " at position: "
+	//	<< this_node
+	//	<< " next_p: "
+	//	<< next_size
+	//	<< " prev_p: "
+	//	<< prev_size << endl;
 }
 
 
@@ -74,7 +74,7 @@ NodeVector::NodeVector(vector<int> layer_sizes) :
 				n_ind.emplace_back( make_pair(start, start + layer_sizes[layer]-0) );
 				start += layer_sizes[layer]+1;
 			}
-			cout << "n_indices:\n";
+			cout << "\nn_indices:\n";
 			for (auto i : n_ind) { cout << i.first << "-" << i.second << endl;}
 			return n_ind;
 			}()
@@ -90,7 +90,7 @@ NodeVector::NodeVector(vector<int> layer_sizes) :
 			}
 			//There is no bias node on last layer:
 			n_ind_b.emplace_back( make_pair(start, start + layer_sizes[layers-1]) );
-			cout << "n_indices_bias:\n";
+			cout << "\nn_indices_bias:\n";
 			for (auto i : n_ind_b) { cout << i.first << "-" << i.second << endl;}
 			return n_ind_b;
 			}()

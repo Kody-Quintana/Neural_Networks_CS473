@@ -17,13 +17,14 @@ NeuralNet::NeuralNet(vector<int> layer_sizes, vector<double>& label_ref, vector<
 	W(NV.n_per_layer_bias),
 	labels(label_ref),
 	inputs(input_ref),
-	error( vector<double>(layer_sizes.back(), 0.0))
+	error( vector<double>(layer_sizes.back(),0.0) ),
+	instance_label( vector<double>(layer_sizes.back(),0.0) )
 {
 	//Constructor body
-	cout << "nodes per layer with bias nodes:" << endl;
-	for (auto n : NV.n_per_layer_bias){
-		cout << "  " << n << endl;
-	}
+	//cout << "nodes per layer with bias nodes:" << endl;
+	//for (auto n : NV.n_per_layer_bias){
+	//	cout << "  " << n << endl;
+	//}
 	for (auto const &node : NV.Nodes){
 		cout << "\n";
 		cout << "Node at layer: " << node.layer << ", pos: " << node.l_node;
@@ -44,8 +45,26 @@ Gradient::Gradient(int layer, int node, double start_value, vector<NN_Node*>* re
 	value(start_value), current_layer(layer), current_node_pos(node), next_paths(ready_next)
 {
 	//Constructor body
-	cout << "Gradient constructed with starting value of: " << value << endl;
+	//cout << "Gradient constructed with starting value of: " << value << endl;
 }
+
+
+void NeuralNet::stage_inputs_and_labels(){
+	for (int node = 0; node < NV.n_indices[0].second; ++node){
+		NV.Nodes[node].value = inputs[ NV.n_per_layer[0] * instance_index + node ];
+	}
+	for (int node = 0; node < NV.n_per_layer.back(); ++node){
+		instance_label[node] = labels[ NV.n_per_layer.back() * instance_index + node ];
+	}
+
+	if ( (instance_index+1) * NV.n_per_layer[0] == inputs.size() ) { instance_index = 0; }
+	else { ++instance_index; }
+	double total = 0.0;
+	for (auto i : error){ total += pow(i,2); }
+	total /= error.size();
+	rmse = sqrt(total);
+}
+
 
 
 double NeuralNet::activation(double sum){
@@ -61,8 +80,8 @@ void NeuralNet::backward_prop(){
 	for (int layer = 0; layer < NV.layers; ++layer){
 		for (int node = NV.n_indices_bias[layer].first; node < NV.n_indices_bias[layer].second; ++node){
 			for (auto const &nn : NV.Nodes[node].next_paths){
-				cout << "Starting back prop to node at layer: " << nn->layer << ", pos: " << nn->l_node;
-				cout << ", through W: " << W.index(nn->layer, nn->l_node, NV.Nodes[node].l_node) << endl;
+				//cout << "Starting back prop to node at layer: " << nn->layer << ", pos: " << nn->l_node;
+				//cout << ", through W: " << W.index(nn->layer, nn->l_node, NV.Nodes[node].l_node) << endl;
 				vector<Gradient> branch_storage;
 				branch_storage.reserve(NV.possible_path_size);
 				branch_storage.emplace_back(Gradient(
@@ -127,8 +146,13 @@ void NeuralNet::backward_prop(){
 						//continue traversing until an output node is reached
 						//Once all branches have finished they will be summed to create the gradient
 
-						//TODO add the final error d/dx here
-						branch_storage[bs_index].value *= -0.5;
+						//No need to multply by -1 here, instead just add the gradient, instead of subtracting
+						branch_storage[bs_index].value *= error[branch_storage[bs_index].current_node_pos];
+
+						////If you want to only adjust with the first output node.
+						//if (branch_storage[bs_index].current_node_pos != 0){
+						//	branch_storage[bs_index].value = 0.0;
+						//}
 
 						++bs_index;
 					}
@@ -138,10 +162,10 @@ void NeuralNet::backward_prop(){
 						[](double incoming, const Gradient& grad) {return grad.value + incoming; }
 						);
 				//cout << "Branch sum: " << std::scientific << branch_sum << endl;
-				cout << "  Updating W:" << W.index(nn->layer, nn->l_node, NV.Nodes[node].l_node) << endl;
-				cout << "    from: " << W(nn->layer, nn->l_node, NV.Nodes[node].l_node) << endl;
+				//cout << "  Updating W:" << W.index(nn->layer, nn->l_node, NV.Nodes[node].l_node) << endl;
+				//cout << "    from: " << W(nn->layer, nn->l_node, NV.Nodes[node].l_node) << endl;
 				W(nn->layer, nn->l_node, NV.Nodes[node].l_node) += (learning_rate * branch_sum);
-				cout << "      to: " << W(nn->layer, nn->l_node, NV.Nodes[node].l_node) << endl;
+				//cout << "      to: " << W(nn->layer, nn->l_node, NV.Nodes[node].l_node) << endl;
 
 			}
 		}
@@ -153,21 +177,44 @@ void NeuralNet::forward_prop(){
 	for (int layer = 1; layer < NV.layers; ++layer){
 		//Update all nodes except bias nodes which will always be 1.0
 		for (int node = NV.n_indices[layer].first; node < NV.n_indices[layer].second; ++node){
-			cout << NV.Nodes[node].value << " -> ";
+			//cout << NV.Nodes[node].value << " -> ";
 			NV.Nodes[node].value = 0.0;
 			for (const auto p_node : NV.Nodes[node].prev_paths){
 				NV.Nodes[node].value += 
 					p_node->value * W(NV.Nodes[node].layer, NV.Nodes[node].l_node, p_node->l_node);
 			}
-			cout << "A(" << NV.Nodes[node].value << ")";
+			//cout << "A(" << NV.Nodes[node].value << ")";
 			NV.Nodes[node].value = activation(NV.Nodes[node].value);
-			cout << std::fixed << " -> " << NV.Nodes[node].value << endl;
+			//cout << std::fixed << " -> " << NV.Nodes[node].value << endl;
 		}
-		cout << "\n";
+		//cout << "\n";
 	}
-	for (int node = NV.n_indices[NV.layers-1].first; node < NV.n_indices[NV.layers-1].second; ++node){
-		cout << "Output: " << NV.Nodes[node].l_node << ", value: " << NV.Nodes[node].value << endl;
-		//TODO put into an error vector of (label[i] - prediction[i])
+	for (int node = NV.n_indices.back().first; node < NV.n_indices.back().second; ++node){
+		//cout << "Output: " << NV.Nodes[node].l_node << ", value: " << NV.Nodes[node].value << endl;
+		error[ NV.Nodes[node].l_node ] = (/*Label*/instance_label[NV.Nodes[node].l_node]-/*Prediction*/NV.Nodes[node].value);
+		//cout << "Error: " << error[ NV.Nodes[node].l_node ] << endl;
 	}
-	for (const auto &node : NV.Nodes){ cout << node.value << endl;}
+	//for (const auto &node : NV.Nodes){ cout << node.value << endl;}
 }
+
+void NeuralNet::train(){
+	cout << "\n";
+	stage_inputs_and_labels();
+	forward_prop();
+	backward_prop();
+
+	stage_inputs_and_labels();
+	forward_prop();
+	backward_prop();
+
+	int iteration = 2;
+	while (rmse > 0.002){
+		stage_inputs_and_labels();
+		forward_prop();
+		backward_prop();
+		cout << "RMSE: " << rmse << " Iteration: " << iteration++ << "\r";
+	}
+	cout << endl;
+	W.print_all();
+}
+

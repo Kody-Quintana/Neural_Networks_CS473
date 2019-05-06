@@ -24,8 +24,8 @@ WeightMatrix::WeightMatrix( std::vector<int> sizes ) :
 				t[j] += this_mat_size;
 			};
 		};
-		cout << "Weight L offsets:\n";
-		for (auto i : t){ cout << "  " << i << endl;};
+		//cout << "Weight L offsets:\n";
+		//for (auto i : t){ cout << "  " << i << endl;};
 		return t; //Initializes const L to this t.
 		}()
 
