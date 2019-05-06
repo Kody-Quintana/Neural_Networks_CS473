@@ -13,7 +13,7 @@ WeightMatrix::WeightMatrix( std::vector<int> sizes ) :
 
 	layers( sizes.size() ),
 
-	//L is used to translate the first arg of WeightMatrix.at(X,X,X)
+	//L is used to translate the first arg of WeightMatrix(X,X,X)
 	// to the appropriate offset because each set of matrices 
 	// is a different size
 	L( [&]() -> std::vector<int> {
@@ -33,6 +33,7 @@ WeightMatrix::WeightMatrix( std::vector<int> sizes ) :
 
 	//W is all weights stored in a single vector
 	W( [&]() -> std::vector<double> {
+		srand(time(NULL));
 		int full_length = 0;
 		for (int i = 1; i < layers; ++i){
 			full_length += layer_sizes[i-1]*layer_sizes[i];

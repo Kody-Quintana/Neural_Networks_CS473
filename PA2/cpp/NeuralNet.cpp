@@ -12,9 +12,11 @@ using std::cout;
 using std::endl;
 
 
-NeuralNet::NeuralNet(vector<int> layer_sizes) :
+NeuralNet::NeuralNet(vector<int> layer_sizes, vector<double>& label_ref, vector<double>& input_ref) :
 	NV(layer_sizes),
 	W(NV.n_per_layer_bias),
+	labels(label_ref),
+	inputs(input_ref),
 	error( vector<double>(layer_sizes.back(), 0.0))
 {
 	//Constructor body

@@ -25,11 +25,16 @@ class NeuralNet{
 		static double activation(double sum);
 		static double dx_activation(double activated_sum);
 	public:
-		NeuralNet(vector<int> layer_sizes);
+		NeuralNet(vector<int> layer_sizes, vector<double>& label_ref, vector<double>& input_ref);
 
 		void forward_prop();
 		void backward_prop();
 
+		void stage_inputs();
+		void stage_labels();
+
+		vector<double>& labels;
+		vector<double>& inputs;
 		vector<double> error;
 		double total_error = 0.0;
 		double learning_rate = 0.01;

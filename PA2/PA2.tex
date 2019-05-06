@@ -58,7 +58,7 @@ The neural network consists of 3 major components:
 \begin{enumerate}
 	\item Weight Matrix class - this class is a functor that stores all of the weights in contigious memory.
 		Each weight is accessed with 3 arguments:
-		the layer, the current node within this layer, and the previous node in the previous layer.
+		the layer, the current node within this layer, and node position from the previous layer.
 	\item Node Vector class - this class stores a node struct called NN\_Node in contigious memory
 		for each node of the neural network. The range of nodes per layer is stored in a vector.
 	\item Neural Network class - this class contains the previous two classes as members.
