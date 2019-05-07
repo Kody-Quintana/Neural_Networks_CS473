@@ -1,5 +1,16 @@
 \documentclass[14pt]{article}
 \usepackage{/home/user/CS476/quintana}
+%\usepackage{shellesc}
+
+
+%\makeatletter
+%\def\app@exe{\immediate\write18}
+%\def\inputAllFiles#1{%
+%  \app@exe{ls #1/*.txt | xargs cat >> \jobname.tmp}%
+%  \InputIfFileExists{\jobname.tmp}{}
+%  \AtEndDocument{\app@exe{rm -f #1/\jobname.tmp}}}
+%\makeatother
+
 \begin{document}
 \begin{flushleft}
  
@@ -65,6 +76,12 @@ The neural network consists of 3 major components:
 		Most of the logic of the neural network is done by this class's methods.
 \end{enumerate}
 
+Lines:
+
+\immediate\write18{./cpplinecount.sh}
+\input{total.txt}
+
+
 	\textbf{WeightMat.hpp}
 	\cppfile{cpp/WeightMat.hpp}
 
@@ -93,6 +110,7 @@ The neural network consists of 3 major components:
 	\cppfile{cpp/main.cpp}
 
 	\textbf{Results}
+	Convergence 
 
 
 \end{flushleft}
