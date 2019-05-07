@@ -100,7 +100,7 @@ The neural network consists of 3 major components totalling \input{total.txt}lin
 \textbf{Results}
 
 Because the inputs and labels are both randomly generated,
-convergence is essentially a ratio of contradictory instances.
+the error of a given instance is essentially a ratio of contradictory instances.
 With each epoch the root mean square error of each instance will represent
 how many other instances have similar inputs compared with their label.
 The higher the error the fewer instances that ``agree'' with that instance,
@@ -108,13 +108,15 @@ and the lower the error the more instances that ``agree''.
 The RMSE of the error function will oscillate between the high value of the minority instances,
 and the low value of the majority instances.
 
-Here are two examples plotted with downsampled data:
+Here are some examples plotted with downsampled data from
+a neural network of three inputs, a hidden layer with four nodes, a second hidden layer with three nodes,
+and an output layer of two outputs.
 
 
 
 \begin{center}
 \begin{tikzpicture}[trim axis left, trim axis right]
-    \begin{axis}[width=0.4\textwidth,no markers, xlabel=iterations, ylabel=RMSE]
+    \begin{axis}[width=0.45\textwidth,no markers, xlabel=iterations, ylabel=RMSE]
             	%\addplot[black] table [x expr=\coordindex+1, y index=0, each nth point=400, filter discard warning=false, unbounded coords=discard]{cpp/rmse.dat};
 		\addplot [no markers, smooth] gnuplot [raw gnuplot] {
 			plot "cpp/ex2_rmse.dat" using ($0*400):1 every 400; % $0 is the dummy column for the coordinate index
@@ -124,10 +126,32 @@ Here are two examples plotted with downsampled data:
 %\hfill
 \hspace{0.1\textwidth}
 \begin{tikzpicture}[trim axis left, trim axis right]
-    \begin{axis}[width=0.4\textwidth,no markers, xlabel=iterations, ylabel=RMSE]
+    \begin{axis}[width=0.45\textwidth,no markers, xlabel=iterations, ylabel=RMSE]
             	%\addplot table [x expr=\coordindex+1, y index=0]{cpp/rmse.dat};
 		\addplot [no markers] gnuplot [raw gnuplot] {
 			plot "cpp/ex1_rmse.dat" using ($0*300):1 every 300; % $0 is the dummy column for the coordinate index
+		};
+     \end{axis}
+\end{tikzpicture}
+\end{center}
+
+
+\begin{center}
+\begin{tikzpicture}[trim axis left, trim axis right]
+    \begin{axis}[width=0.45\textwidth,no markers, xlabel=iterations, ylabel=RMSE]
+            	%\addplot[black] table [x expr=\coordindex+1, y index=0, each nth point=400, filter discard warning=false, unbounded coords=discard]{cpp/rmse.dat};
+		\addplot [no markers, smooth] gnuplot [raw gnuplot] {
+			plot "cpp/ex3_rmse.dat" using ($0*800):1 every 800; % $0 is the dummy column for the coordinate index
+		};
+     \end{axis}
+\end{tikzpicture}%
+%\hfill
+\hspace{0.1\textwidth}
+\begin{tikzpicture}[trim axis left, trim axis right]
+    \begin{axis}[width=0.45\textwidth,no markers, xlabel=iterations, ylabel=RMSE]
+            	%\addplot table [x expr=\coordindex+1, y index=0]{cpp/rmse.dat};
+		\addplot [no markers] gnuplot [raw gnuplot] {
+			plot "cpp/ex4_rmse.dat" using ($0*900):1 every 900; % $0 is the dummy column for the coordinate index
 		};
      \end{axis}
 \end{tikzpicture}
