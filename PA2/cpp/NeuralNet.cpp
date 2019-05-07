@@ -6,6 +6,7 @@
 #include <iostream>
 #include <cmath>
 #include <numeric>
+#include <fstream>
 
 using std::vector;
 using std::cout;
@@ -208,14 +209,20 @@ void NeuralNet::train(){
 	forward_prop();
 	backward_prop();
 
+	ofstream rmse_log;
+	rmse_log.open ("./rmse.dat");
+
 	int iteration = 2;
 	while (rmse > 0.002){
 		stage_inputs_and_labels();
 		forward_prop();
 		backward_prop();
 		cout << "RMSE: " << rmse << " Iteration: " << iteration++ << "\r";
+		rmse_log << rmse << "\n";
+
 	}
 	cout << endl;
 	W.print_all();
+	rmse_log.close();
 }
 
