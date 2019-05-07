@@ -15,9 +15,6 @@ int main( int argc, char** argv ){
 	const int INPUT_SIZE = 3;
 	const int LABEL_SIZE = 2;
 
-	std::random_device rd; // obtain a random number from hardware
-	std::mt19937 eng(rd()); // seed the generator
-
 	//Generate INPUTS
 	vector<double> INPUTS;
 	srand(time(NULL));
@@ -26,7 +23,6 @@ int main( int argc, char** argv ){
 			return rand() * (1.0/RAND_MAX); 
 		}
 	);
-
 
 	////Print INPUTS
 	//for (long unsigned int i = 0; i < INPUTS.size() - (INPUT_SIZE - 1); i+=INPUT_SIZE){
@@ -38,6 +34,8 @@ int main( int argc, char** argv ){
 
 	//Generate LABELS
 	vector<double> LABELS(INSTANCE_SIZE * LABEL_SIZE, 0.0);
+	std::random_device rd; // obtain a random number from hardware
+	std::mt19937 eng(rd()); // seed the generator
 	std::uniform_int_distribution<> label_distr(0, LABEL_SIZE - 1); // define the range
 	for (long unsigned int i = 0; i < LABELS.size() - (LABEL_SIZE - 1); i+=LABEL_SIZE){
 		LABELS[i + label_distr(eng)] = 1.0;
@@ -51,7 +49,7 @@ int main( int argc, char** argv ){
 	//	cout << endl;
 	//}
 
-	NeuralNet project( {INPUT_SIZE, 4, 3, LABEL_SIZE}, LABELS, INPUTS );
+	NeuralNet project( {INPUT_SIZE, 4, 3, LABEL_SIZE}, LABELS, INPUTS, 0.00001 );
 	project.train();
 
 	return(0);

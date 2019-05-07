@@ -1,15 +1,5 @@
 \documentclass[14pt]{article}
 \usepackage{/home/user/CS476/quintana}
-%\usepackage{shellesc}
-
-
-%\makeatletter
-%\def\app@exe{\immediate\write18}
-%\def\inputAllFiles#1{%
-%  \app@exe{ls #1/*.txt | xargs cat >> \jobname.tmp}%
-%  \InputIfFileExists{\jobname.tmp}{}
-%  \AtEndDocument{\app@exe{rm -f #1/\jobname.tmp}}}
-%\makeatother
 
 \begin{document}
 \begin{flushleft}
@@ -27,17 +17,17 @@ Final Project
 
 \question
 \textbf{Given:}
-	A system with 3 inputs and 1000 randomly generted instances, $x_i$'s
+	A system with 3 inputs and 1000 randomly generated instances, $x_i$'s
 	for each input to give a full input set
-	\[X = [x_0, x_1, x_2] \]
-	where
-	\[x_1 = [x_0, x_1, x_3, \ldots x_{999}, 1]\]
-	$x_2$ and $x_3$ are similar.
-	A hidden layer of four nodes
-	\[h = [h_0, h_1, h_2, h_3]\]
-	and output labels
-	\[Y_0 = y_0, y_1, \ldots y_{999}\]
-	\[Y_1 = y_0, y_1, \ldots y_{999}\]
+		\[X = [x_0,\ x_1,\ x_2] \]
+	where:
+		\[x_1 = [x_0,\ x_1,\ x_3,\ \ldots \ x_{999},\ 1]\]
+		$x_2$ and $x_3$ are similar.
+	A hidden layer of four nodes:
+		\[h = [h_0,\ h_1,\ h_2,\ h_3]\]
+	and output labels:
+		\[Y_0 = [y_0, \ y_1, \ \ldots \ y_{999}] \]
+		\[Y_1 = [y_0, \ y_1, \ \ldots \ y_{999}] \]
 	
 \textbf{Find:}
 	\begin{enumerate}
@@ -60,26 +50,26 @@ Final Project
 
 \newpage
 %\setlength\parindent{24pt}
+
+
+\immediate\write18{./cpplinecount.sh}
+
 This implementation supports a neural network of any number of layers and any number of nodes per layer.
+Larger configurations are very slow however because it is single-threaded.
 It's layout is stored as a multi-linked list.		
 This structure is probably less performant because of all the required pointer dereferencing,
 but it is the most simple way I could think of to implement generalized back-propagation.
 
-The neural network consists of 3 major components:
+The neural network consists of 3 major components totalling \input{total.txt}lines.
 \begin{enumerate}
-	\item Weight Matrix class - this class is a functor that stores all of the weights in contigious memory.
+	\item Weight Matrix class - this class is a functor that stores all of the weights in contiguous memory.
 		Each weight is accessed with 3 arguments:
 		the layer, the current node within this layer, and node position from the previous layer.
-	\item Node Vector class - this class stores a node struct called NN\_Node in contigious memory
+	\item Node Vector class - this class stores a node struct called NN\_Node in contiguous memory
 		for each node of the neural network. The range of nodes per layer is stored in a vector.
 	\item Neural Network class - this class contains the previous two classes as members.
 		Most of the logic of the neural network is done by this class's methods.
 \end{enumerate}
-
-Lines:
-
-\immediate\write18{./cpplinecount.sh}
-\input{total.txt}
 
 
 	\textbf{WeightMat.hpp}
@@ -89,7 +79,6 @@ Lines:
 	\cppfile{cpp/WeightMat.cpp}
 
 
-	\newpage
 	\textbf{NodeVec.hpp}
 	\cppfile{cpp/NodeVec.hpp}
 
@@ -97,7 +86,6 @@ Lines:
 	\cppfile{cpp/NodeVec.cpp}
 
 
-	\newpage
 	\textbf{NeuralNet.hpp}
 	\cppfile{cpp/NeuralNet.hpp}
 
@@ -105,12 +93,19 @@ Lines:
 	\cppfile{cpp/NeuralNet.cpp}
 
 
-	\newpage
 	\textbf{main.cpp}
 	\cppfile{cpp/main.cpp}
 
-	\textbf{Results}
-	Convergence 
+\textbf{Results}
+
+Because the inputs and labels are both randomly generated,
+convergence is essentially a ratio of contradictory instances.
+With each epoch the root mean square error of each instance will represent
+how many other instances have similar inputs compared with their label.
+The higher the error the fewer instances that ``agree'' with that instance,
+and the lower the error the more instances that ``agree''.
+The RMSE of the error function will oscillate between the high value of the minority instances,
+and the low value of the majority instances.
 
 
 \end{flushleft}

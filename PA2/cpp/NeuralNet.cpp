@@ -12,13 +12,14 @@ using std::cout;
 using std::endl;
 
 
-NeuralNet::NeuralNet(vector<int> layer_sizes, vector<double>& label_ref, vector<double>& input_ref) :
+NeuralNet::NeuralNet(vector<int> layer_sizes, vector<double>& label_ref, vector<double>& input_ref, double learn_rate) :
 	NV(layer_sizes),
 	W(NV.n_per_layer_bias),
 	labels(label_ref),
 	inputs(input_ref),
 	error( vector<double>(layer_sizes.back(),0.0) ),
-	instance_label( vector<double>(layer_sizes.back(),0.0) )
+	instance_label( vector<double>(layer_sizes.back(),0.0) ),
+	learning_rate(learn_rate)
 {
 	//Constructor body
 	//cout << "nodes per layer with bias nodes:" << endl;
