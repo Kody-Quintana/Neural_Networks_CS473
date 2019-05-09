@@ -176,7 +176,7 @@ void NeuralNet::backward_prop(){
 				//End while
 
 				////Uncomment for back-prop paths
-				//cout << "\nThis branch paths:\n";
+				//cout << "\nPaths to update weight: " << W.index(nn->layer, nn->l_node, NV.Nodes[node].l_node) << "\n";
 				//for (auto & s : branch_storage) { cout << s.s_path << endl; }
 
 				double branch_sum = std::accumulate(begin(branch_storage), end(branch_storage), 0.0,
