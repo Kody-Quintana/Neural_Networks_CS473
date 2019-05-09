@@ -158,7 +158,7 @@ void NeuralNet::backward_prop(){
 						//Once all branches have finished they will be summed to create the gradient
 
 						//No need to multply by -1 here, instead just add the gradient, instead of subtracting
-						branch_storage[bs_index].value *= error[branch_storage[bs_index].current_node_pos];
+						branch_storage[bs_index].value *= error[ branch_storage[bs_index].current_node_pos ];
 
 						////If you want to only adjust with the first output node.
 						//if (branch_storage[bs_index].current_node_pos != 0){

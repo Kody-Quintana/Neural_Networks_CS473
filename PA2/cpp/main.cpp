@@ -49,7 +49,7 @@ int main( int argc, char** argv ){
 	//	cout << endl;
 	//}
 
-	NeuralNet project( {INPUT_SIZE, 4, 3, LABEL_SIZE}, LABELS, INPUTS, 0.00001, INSTANCE_SIZE );
+	NeuralNet project( {INPUT_SIZE, 4, 3, LABEL_SIZE}, LABELS, INPUTS, 0.001, INSTANCE_SIZE );
 	project.train();
 
 	return(0);
