@@ -7,20 +7,22 @@
 #include <cmath>
 #include <numeric>
 #include <fstream>
+#include <algorithm>
 
 using std::vector;
 using std::cout;
 using std::endl;
 
 
-NeuralNet::NeuralNet(vector<int> layer_sizes, vector<double>& label_ref, vector<double>& input_ref, double learn_rate) :
+NeuralNet::NeuralNet(vector<int> layer_sizes, vector<double>& label_ref, vector<double>& input_ref, double learn_rate, int n_instances) :
 	NV(layer_sizes),
 	W(NV.n_per_layer_bias),
 	labels(label_ref),
 	inputs(input_ref),
 	error( vector<double>(layer_sizes.back(),0.0) ),
 	instance_label( vector<double>(layer_sizes.back(),0.0) ),
-	learning_rate(learn_rate)
+	learning_rate(learn_rate),
+	instance_size(n_instances)
 {
 	//Constructor body
 	//cout << "nodes per layer with bias nodes:" << endl;
@@ -201,28 +203,51 @@ void NeuralNet::forward_prop(){
 
 void NeuralNet::train(){
 	cout << "\n";
-	stage_inputs_and_labels();
-	forward_prop();
-	backward_prop();
+
+	vector<double> rmse_dat;
+	rmse_dat.reserve(1000000);
 
 	stage_inputs_and_labels();
 	forward_prop();
 	backward_prop();
+	//rmse_log << rmse << "\n";
 
-	ofstream rmse_log;
-	rmse_log.open ("./rmse.dat");
+	stage_inputs_and_labels();
+	forward_prop();
+	backward_prop();
+	//rmse_log << rmse << "\n";
+	rmse_dat.emplace_back(rmse);
+	rmse_dat.emplace_back(rmse);
 
-	int iteration = 2;
-	while (rmse > 0.002){
+	int iteration = 1;
+	//while (rmse > 0.002){
+	while (iteration < 2000000){
 		stage_inputs_and_labels();
 		forward_prop();
 		backward_prop();
 		cout << "RMSE: " << rmse << " Iteration: " << iteration++ << "\r";
-		rmse_log << rmse << "\n";
+		//rmse_log << rmse << "\n";
+		rmse_dat.emplace_back(rmse);
 
 	}
 	cout << endl;
 	W.print_all();
+
+	ofstream rmse_log;
+	rmse_log.open ("./rmse1.dat");
+
+	ofstream rmse_log2;
+	rmse_log2.open ("./rmse2.dat");
+	for (int i = 0; i < rmse_dat.size(); i += instance_size){
+		std::sort (rmse_dat.begin()+i, rmse_dat.begin()+i+instance_size);
+	}
+	for (int i = 0; i < 10000; ++i){
+		rmse_log << rmse_dat[i] << "\n";
+	}
+	for (int i = rmse_dat.size() - (10 * 1000); i < rmse_dat.size(); ++i){
+		rmse_log2 << rmse_dat[i] << "\n";
+	}
+	//for (auto r : rmse_dat) { rmse_log << r << "\n"; }
 	rmse_log.close();
 }
 

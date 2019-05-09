@@ -25,7 +25,7 @@ class NeuralNet{
 		static double activation(double sum);
 		static double dx_activation(double activated_sum);
 	public:
-		NeuralNet(vector<int> layer_sizes, vector<double>& label_ref, vector<double>& input_ref, double learn_rate);
+		NeuralNet(vector<int> layer_sizes, vector<double>& label_ref, vector<double>& input_ref, double learn_rate, int n_instances);
 
 		void forward_prop();
 		void backward_prop();
@@ -42,6 +42,7 @@ class NeuralNet{
 
 		double rmse;
 		const double learning_rate;
+		const int instance_size;
 
 
 		void train();

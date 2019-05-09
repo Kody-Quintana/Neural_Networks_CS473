@@ -13,7 +13,7 @@ int main( int argc, char** argv ){
 
 	const int INSTANCE_SIZE = 1000;
 	const int INPUT_SIZE = 3;
-	const int LABEL_SIZE = 2;
+	const int LABEL_SIZE = 5;
 
 	//Generate INPUTS
 	vector<double> INPUTS;
@@ -49,7 +49,7 @@ int main( int argc, char** argv ){
 	//	cout << endl;
 	//}
 
-	NeuralNet project( {INPUT_SIZE, 4, 3, LABEL_SIZE}, LABELS, INPUTS, 0.00001 );
+	NeuralNet project( {INPUT_SIZE, 4, 3, LABEL_SIZE}, LABELS, INPUTS, 0.00001, INSTANCE_SIZE );
 	project.train();
 
 	return(0);

@@ -1,7 +1,7 @@
 \documentclass[14pt]{article}
 \usepackage{/home/user/CS476/quintana}
-
 \begin{document}
+
 \begin{flushleft}
  
 \large
@@ -73,21 +73,21 @@ The neural network consists of 3 major components totalling \input{total.txt}lin
 
 
 	\textbf{WeightMat.hpp}
-	\cppfile{cpp/WeightMat.hpp}
+	\hppfile{cpp/WeightMat.hpp}
 
 	\textbf{WeightMat.cpp}
 	\cppfile{cpp/WeightMat.cpp}
 
 
 	\textbf{NodeVec.hpp}
-	\cppfile{cpp/NodeVec.hpp}
+	\hppfile{cpp/NodeVec.hpp}
 
 	\textbf{NodeVec.cpp}
 	\cppfile{cpp/NodeVec.cpp}
 
 
 	\textbf{NeuralNet.hpp}
-	\cppfile{cpp/NeuralNet.hpp}
+	\hppfile{cpp/NeuralNet.hpp}
 
 	\textbf{NeuralNet.cpp}
 	\cppfile{cpp/NeuralNet.cpp}
@@ -96,22 +96,14 @@ The neural network consists of 3 major components totalling \input{total.txt}lin
 	\textbf{main.cpp}
 	\cppfile{cpp/main.cpp}
 
-\newpage
 \textbf{Results}
 
-Because the inputs and labels are both randomly generated,
-the error of a given instance is essentially a ratio of contradictory instances.
-With each epoch the root mean square error of each instance will represent
-how many other instances have similar inputs compared with their label.
-The higher the error the fewer instances that ``agree'' with that instance,
-and the lower the error the more instances that ``agree''.
-The RMSE of the error function will oscillate between the high value of the minority instances,
-and the low value of the majority instances.
+
+As the neural net trains the RMSE of the error function oscillates between the best case and the worst case error.
 
 Here are some examples plotted with downsampled data from
 a neural network of three inputs, a hidden layer with four nodes, a second hidden layer with three nodes,
 and an output layer of two outputs.
-
 
 
 \begin{center}
@@ -149,9 +141,16 @@ and an output layer of two outputs.
 \hspace{0.1\textwidth}
 \begin{tikzpicture}[trim axis left, trim axis right]
     \begin{axis}[width=0.45\textwidth,no markers, xlabel=iterations, ylabel=RMSE]
+
+            	%\addplot[black] table [x expr=\coordindex+1, y index=0, each nth point=4000, filter discard warning=false, unbounded coords=discard]{cpp/ex4_rmse.dat};
             	%\addplot table [x expr=\coordindex+1, y index=0]{cpp/rmse.dat};
-		\addplot [no markers] gnuplot [raw gnuplot] {
-			plot "cpp/ex4_rmse.dat" using ($0*900):1 every 900; % $0 is the dummy column for the coordinate index
+		\addplot [] gnuplot [raw gnuplot] {
+			set style fill transparent solid 0.7;
+			%set style fill  transparent solid 0.001 noborder;
+			set style circle radius 0.02;
+			plot "cpp/ex4_rmse.dat" using ($0*900):1 every 900 with circles lc rgb "blue"; % $0 is the dummy column for the coordinate index
+			%plot 'test' u 1:2 with circles lc rgb "blue", \
+     			%	'' u 1:2 every 100 w circles lc rgb "red" fs solid 1.0 border lt -1
 		};
      \end{axis}
 \end{tikzpicture}
@@ -159,6 +158,77 @@ and an output layer of two outputs.
 
 
 
+
+
+
+
+
+
+
+\newpage
+Here are the first 10,000 and last 10,000 out of 2,000,000 iterations.
+The errors of each instance (of size 1000) have been sorted to show the first and last 10 epochs.
+
+\begin{center}
+\begin{tikzpicture}[trim axis left, trim axis right]
+    \begin{axis}[width=0.45\textwidth,no markers, xlabel=iterations, ylabel=RMSE, title= 2 random outputs, ymin=0.35, ymax=0.8]
+
+            	%\addplot[black] table [x expr=\coordindex+1, y index=0, each nth point=400, filter discard warning=false, unbounded coords=discard]{cpp/rmse.dat};
+            	%\addplot table [x expr=\coordindex+1, y index=0]{cpp/rmse.dat};
+		\addplot [red, no markers] gnuplot [raw gnuplot] {
+			plot "cpp/rmse1_2.dat" using ($0*5):1 every 5; % $0 is the dummy column for the coordinate index
+		};
+		\addplot [blue, no markers] gnuplot [raw gnuplot] {
+			plot "cpp/rmse2_2.dat" using ($0*5):1 every 5; % $0 is the dummy column for the coordinate index
+		};
+     \end{axis}
+\end{tikzpicture}
+\hspace{0.1\textwidth}
+\begin{tikzpicture}[trim axis left, trim axis right]
+    \begin{axis}[width=0.45\textwidth,no markers, xlabel=iterations, ylabel=RMSE, title = 3 random outputs, ymin=0.35, ymax=0.8]
+
+            	%\addplot[black] table [x expr=\coordindex+1, y index=0, each nth point=400, filter discard warning=false, unbounded coords=discard]{cpp/rmse.dat};
+            	%\addplot table [x expr=\coordindex+1, y index=0]{cpp/rmse.dat};
+		\addplot [red, no markers] gnuplot [raw gnuplot] {
+			plot "cpp/rmse1_3.dat" using ($0*5):1 every 5; % $0 is the dummy column for the coordinate index
+		};
+		\addplot [blue, no markers] gnuplot [raw gnuplot] {
+			plot "cpp/rmse2_3.dat" using ($0*5):1 every 5; % $0 is the dummy column for the coordinate index
+		};
+     \end{axis}
+\end{tikzpicture}
+\end{center}
+
+
+\begin{center}
+\begin{tikzpicture}[trim axis left, trim axis right]
+    \begin{axis}[width=0.45\textwidth,no markers, xlabel=iterations, ylabel=RMSE, title= 4 random outputs,ymin=0.35, ymax=0.8]
+
+            	%\addplot[black] table [x expr=\coordindex+1, y index=0, each nth point=400, filter discard warning=false, unbounded coords=discard]{cpp/rmse.dat};
+            	%\addplot table [x expr=\coordindex+1, y index=0]{cpp/rmse.dat};
+		\addplot [red, no markers] gnuplot [raw gnuplot] {
+			plot "cpp/rmse1_4.dat" using ($0*5):1 every 5; % $0 is the dummy column for the coordinate index
+		};
+		\addplot [blue, no markers] gnuplot [raw gnuplot] {
+			plot "cpp/rmse2_4.dat" using ($0*5):1 every 5; % $0 is the dummy column for the coordinate index
+		};
+     \end{axis}
+\end{tikzpicture}
+\hspace{0.1\textwidth}
+\begin{tikzpicture}[trim axis left, trim axis right]
+    \begin{axis}[width=0.45\textwidth,no markers, xlabel=iterations, ylabel=RMSE, title = 5 random outputs,ymin=0.35, ymax=0.8]
+
+            	%\addplot[black] table [x expr=\coordindex+1, y index=0, each nth point=400, filter discard warning=false, unbounded coords=discard]{cpp/rmse.dat};
+            	%\addplot table [x expr=\coordindex+1, y index=0]{cpp/rmse.dat};
+		\addplot [red, no markers] gnuplot [raw gnuplot] {
+			plot "cpp/rmse1_5.dat" using ($0*5):1 every 5; % $0 is the dummy column for the coordinate index
+		};
+		\addplot [blue, no markers] gnuplot [raw gnuplot] {
+			plot "cpp/rmse2_5.dat" using ($0*5):1 every 5; % $0 is the dummy column for the coordinate index
+		};
+     \end{axis}
+\end{tikzpicture}
+\end{center}
 
 \end{flushleft}
 \end{document}
