@@ -5,7 +5,7 @@
 #include "WeightMat.hpp"
 
 #include <vector>
-
+#include <string>
 
 using std::vector;
 
@@ -14,6 +14,7 @@ struct Gradient{
 	int current_layer;
 	int current_node_pos;
 	vector<NN_Node*>* next_paths;
+	std::string s_path = "";
 	Gradient(int layer, int node, double start_value, vector<NN_Node*>* ready_next);
 };
 

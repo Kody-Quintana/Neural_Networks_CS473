@@ -8,6 +8,7 @@
 #include <numeric>
 #include <fstream>
 #include <algorithm>
+#include <string>
 
 using std::vector;
 using std::cout;
@@ -50,6 +51,7 @@ Gradient::Gradient(int layer, int node, double start_value, vector<NN_Node*>* re
 {
 	//Constructor body
 	//cout << "Gradient constructed with starting value of: " << value << endl;
+	s_path += " " + std::to_string(current_node_pos);
 }
 
 
@@ -117,6 +119,7 @@ void NeuralNet::backward_prop(){
 								) * dx_activation( (*branch_storage[bs_index].next_paths)[n]->value )
 							);
 							branch_storage.back().current_node_pos = next_node_pos;
+							branch_storage.back().s_path += " " + std::to_string(next_node_pos);
 						}
 						Gradient temp = branch_storage[bs_index];
 						int next_node_pos = (*branch_storage[bs_index].next_paths) [0]->l_node;
@@ -130,6 +133,7 @@ void NeuralNet::backward_prop(){
 
 						);
 						temp.current_node_pos = next_node_pos;
+						temp.s_path += " " + std::to_string(next_node_pos);
 						branch_storage[bs_index] = temp;
 					}
 					else if (branch_storage[bs_index].next_paths->size() == 1){
@@ -145,6 +149,7 @@ void NeuralNet::backward_prop(){
 							) * dx_activation( (*branch_storage[bs_index].next_paths)[0]->value )
 						);
 						temp.current_node_pos = next_node_pos;
+						temp.s_path += " " + std::to_string(next_node_pos);
 						branch_storage[bs_index] = temp;
 					}
 					else{
@@ -169,6 +174,11 @@ void NeuralNet::backward_prop(){
 					}
 				}
 				//End while
+
+				////Uncomment for back-prop paths
+				//cout << "\nThis branch paths:\n";
+				//for (auto & s : branch_storage) { cout << s.s_path << endl; }
+
 				double branch_sum = std::accumulate(begin(branch_storage), end(branch_storage), 0.0,
 						[](double incoming, const Gradient& grad) {return grad.value + incoming; }
 						);
