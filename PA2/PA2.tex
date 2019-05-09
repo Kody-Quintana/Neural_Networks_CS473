@@ -45,7 +45,7 @@ Final Project
 
 \question
 \textbf{Extra Credit: (50 pts.)}
-	Solve the above problem with an additional hidden layer, $h_2$ with the three hidden nodes.
+	Solve the above problem with an additional hidden layer, $h_2$ with three hidden nodes.
 \closequestion
 
 \newpage
@@ -70,6 +70,7 @@ The neural network consists of 3 major components totalling \input{total.txt}lin
 	\item Neural Network class - this class contains the previous two classes as members.
 		Most of the logic of the neural network is done by this class's methods.
 \end{enumerate}
+Headers are shown in blue and source files are shown in grey.
 
 
 	\textbf{WeightMat.hpp}
@@ -96,9 +97,9 @@ The neural network consists of 3 major components totalling \input{total.txt}lin
 	\textbf{main.cpp}
 	\cppfile{cpp/main.cpp}
 
+%\newpage
 \newpage
 \textbf{Results}
-
 
 As the neural net trains the RMSE of the error function oscillates between the best case and the worst case error.
 
@@ -110,22 +111,21 @@ and an output layer of two outputs.
 \begin{center}
 \begin{tikzpicture}[trim axis left, trim axis right]
     \begin{axis}[width=0.45\textwidth,no markers, xlabel=iterations, ylabel=RMSE]
+            	%\addplot table [x expr=\coordindex+1, y index=0]{cpp/rmse.dat};
+		\addplot [no markers] gnuplot [raw gnuplot] {
+			plot "cpp/ex1_rmse.dat" using ($0*400):1 every 400; % $0 is the dummy column for the coordinate index
+		};
+     \end{axis}
+\end{tikzpicture}
+\hspace{0.1\textwidth}
+\begin{tikzpicture}[trim axis left, trim axis right]
+    \begin{axis}[width=0.45\textwidth,no markers, xlabel=iterations, ylabel=RMSE]
             	%\addplot[black] table [x expr=\coordindex+1, y index=0, each nth point=400, filter discard warning=false, unbounded coords=discard]{cpp/rmse.dat};
 		\addplot [no markers, smooth] gnuplot [raw gnuplot] {
 			plot "cpp/ex2_rmse.dat" using ($0*400):1 every 400; % $0 is the dummy column for the coordinate index
 		};
      \end{axis}
 \end{tikzpicture}%
-%\hfill
-\hspace{0.1\textwidth}
-\begin{tikzpicture}[trim axis left, trim axis right]
-    \begin{axis}[width=0.45\textwidth,no markers, xlabel=iterations, ylabel=RMSE]
-            	%\addplot table [x expr=\coordindex+1, y index=0]{cpp/rmse.dat};
-		\addplot [no markers] gnuplot [raw gnuplot] {
-			plot "cpp/ex1_rmse.dat" using ($0*300):1 every 300; % $0 is the dummy column for the coordinate index
-		};
-     \end{axis}
-\end{tikzpicture}
 \end{center}
 
 
@@ -134,7 +134,7 @@ and an output layer of two outputs.
     \begin{axis}[width=0.45\textwidth,no markers, xlabel=iterations, ylabel=RMSE]
             	%\addplot[black] table [x expr=\coordindex+1, y index=0, each nth point=400, filter discard warning=false, unbounded coords=discard]{cpp/rmse.dat};
 		\addplot [no markers, smooth] gnuplot [raw gnuplot] {
-			plot "cpp/ex3_rmse.dat" using ($0*800):1 every 800; % $0 is the dummy column for the coordinate index
+			plot "cpp/ex3_rmse.dat" using ($0*400):1 every 400; % $0 is the dummy column for the coordinate index
 		};
      \end{axis}
 \end{tikzpicture}%
@@ -146,10 +146,7 @@ and an output layer of two outputs.
             	%\addplot[black] table [x expr=\coordindex+1, y index=0, each nth point=4000, filter discard warning=false, unbounded coords=discard]{cpp/ex4_rmse.dat};
             	%\addplot table [x expr=\coordindex+1, y index=0]{cpp/rmse.dat};
 		\addplot [] gnuplot [raw gnuplot] {
-			set style fill transparent solid 0.7;
-			%set style fill  transparent solid 0.001 noborder;
-			set style circle radius 0.02;
-			plot "cpp/ex4_rmse.dat" using ($0*900):1 every 900 with circles lc rgb "blue"; % $0 is the dummy column for the coordinate index
+			plot "cpp/ex4_rmse.dat" using ($0*400):1 every 400; % $0 is the dummy column for the coordinate index
 			%plot 'test' u 1:2 with circles lc rgb "blue", \
      			%	'' u 1:2 every 100 w circles lc rgb "red" fs solid 1.0 border lt -1
 		};
@@ -230,6 +227,9 @@ The errors of each instance (of size 1000) have been sorted to show the first an
      \end{axis}
 \end{tikzpicture}
 \end{center}
+
+
+
 
 \end{flushleft}
 \end{document}

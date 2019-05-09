@@ -5,7 +5,6 @@
 
 using namespace std;
 
-
 NN_Node::NN_Node(int this_layer, int this_node, int next_size, int prev_size) :
 
 	layer(this_layer),
@@ -27,15 +26,6 @@ NN_Node::NN_Node(int this_layer, int this_node, int next_size, int prev_size) :
 		  )
 {
 	//Constructor body
-	//cout
-	//	<< "Node in layer: "
-	//	<< this_layer
-	//	<< " at position: "
-	//	<< this_node
-	//	<< " next_p: "
-	//	<< next_size
-	//	<< " prev_p: "
-	//	<< prev_size << endl;
 }
 
 

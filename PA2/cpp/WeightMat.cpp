@@ -62,9 +62,11 @@ double& WeightMatrix::operator()(int a, int b, int c){
 	return W[ L[a-1] + layer_sizes[a-1]*b + c];
 }
 
+
 int WeightMatrix::index(int a, int b, int c){
 	return L[a-1] + layer_sizes[a-1]*b + c;
 }
+
 
 void WeightMatrix::print_all(){
 	for (auto i : W){cout << i << endl;};

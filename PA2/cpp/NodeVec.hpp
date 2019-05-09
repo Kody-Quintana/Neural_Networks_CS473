@@ -4,8 +4,6 @@
 #include <iostream>
 #include <vector>
 
-//#include "NeuralNet.hpp"
-
 using namespace std;
 
 struct NN_Node{

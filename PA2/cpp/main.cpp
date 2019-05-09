@@ -13,7 +13,7 @@ int main( int argc, char** argv ){
 
 	const int INSTANCE_SIZE = 1000;
 	const int INPUT_SIZE = 3;
-	const int LABEL_SIZE = 5;
+	const int LABEL_SIZE = 2;
 
 	//Generate INPUTS
 	vector<double> INPUTS;

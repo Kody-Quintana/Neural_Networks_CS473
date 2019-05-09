@@ -70,10 +70,10 @@ void NeuralNet::stage_inputs_and_labels(){
 }
 
 
-
 double NeuralNet::activation(double sum){
 	return 1.0 / (1.0 + exp(-sum));
 }
+
 
 double NeuralNet::dx_activation(double activated_sum){
 	return activated_sum * (1.0 - activated_sum);
@@ -107,7 +107,8 @@ void NeuralNet::backward_prop(){
 						// 2) the d/dx of the assigned node's activation function
 						for (long unsigned int n = 1; n < branch_storage[bs_index].next_paths->size(); ++n){
 							branch_storage.emplace_back(branch_storage[bs_index]);
-							branch_storage.back().next_paths = &(*branch_storage[bs_index].next_paths) [n]->next_paths;
+							int next_node_pos = (*branch_storage[bs_index].next_paths) [n]->l_node;
+							branch_storage.back().next_paths = & (*branch_storage[bs_index].next_paths) [n]->next_paths;
 							branch_storage.back().value *= (
 								W(
 									(*branch_storage[bs_index].next_paths) [n]->layer,
@@ -115,22 +116,27 @@ void NeuralNet::backward_prop(){
 									branch_storage[bs_index].current_node_pos
 								) * dx_activation( (*branch_storage[bs_index].next_paths)[n]->value )
 							);
+							branch_storage.back().current_node_pos = next_node_pos;
 						}
 						Gradient temp = branch_storage[bs_index];
-						temp.next_paths = &(*branch_storage[bs_index].next_paths) [0]->next_paths;
+						int next_node_pos = (*branch_storage[bs_index].next_paths) [0]->l_node;
+						temp.next_paths = & (*branch_storage[bs_index].next_paths) [0]->next_paths;
 						temp.value *= (
 							W(
 								(*branch_storage[bs_index].next_paths) [0]->layer,
 								(*branch_storage[bs_index].next_paths) [0]->l_node,
 								branch_storage[bs_index].current_node_pos
 							) * dx_activation( (*branch_storage[bs_index].next_paths)[0]->value )
+
 						);
+						temp.current_node_pos = next_node_pos;
 						branch_storage[bs_index] = temp;
 					}
 					else if (branch_storage[bs_index].next_paths->size() == 1){
 						//Similar to above, this case handles when there is only one possible path moving forward
 						Gradient temp = branch_storage[bs_index];
-						temp.next_paths = &(*branch_storage[bs_index].next_paths)[0]->next_paths;
+						int next_node_pos = (*branch_storage[bs_index].next_paths) [0]->l_node;
+						temp.next_paths = & (*branch_storage[bs_index].next_paths)[0]->next_paths;
 						temp.value *= (
 							W(
 								(*branch_storage[bs_index].next_paths)[0]->layer,
@@ -138,6 +144,7 @@ void NeuralNet::backward_prop(){
 								branch_storage[bs_index].current_node_pos
 							) * dx_activation( (*branch_storage[bs_index].next_paths)[0]->value )
 						);
+						temp.current_node_pos = next_node_pos;
 						branch_storage[bs_index] = temp;
 					}
 					else{
@@ -201,32 +208,30 @@ void NeuralNet::forward_prop(){
 	//for (const auto &node : NV.Nodes){ cout << node.value << endl;}
 }
 
+
 void NeuralNet::train(){
 	cout << "\n";
 
 	vector<double> rmse_dat;
-	rmse_dat.reserve(1000000);
+	rmse_dat.reserve(2000000);
 
 	stage_inputs_and_labels();
 	forward_prop();
 	backward_prop();
-	//rmse_log << rmse << "\n";
 
 	stage_inputs_and_labels();
 	forward_prop();
 	backward_prop();
-	//rmse_log << rmse << "\n";
 	rmse_dat.emplace_back(rmse);
 	rmse_dat.emplace_back(rmse);
 
 	int iteration = 1;
 	//while (rmse > 0.002){
-	while (iteration < 2000000){
+	while (iteration < 800000){
 		stage_inputs_and_labels();
 		forward_prop();
 		backward_prop();
 		cout << "RMSE: " << rmse << " Iteration: " << iteration++ << "\r";
-		//rmse_log << rmse << "\n";
 		rmse_dat.emplace_back(rmse);
 
 	}
@@ -234,20 +239,20 @@ void NeuralNet::train(){
 	W.print_all();
 
 	ofstream rmse_log;
-	rmse_log.open ("./rmse1.dat");
+	rmse_log.open ("./rmse.dat");
+	for (auto r : rmse_dat) { rmse_log << r << "\n"; }
 
-	ofstream rmse_log2;
-	rmse_log2.open ("./rmse2.dat");
-	for (int i = 0; i < rmse_dat.size(); i += instance_size){
-		std::sort (rmse_dat.begin()+i, rmse_dat.begin()+i+instance_size);
-	}
-	for (int i = 0; i < 10000; ++i){
-		rmse_log << rmse_dat[i] << "\n";
-	}
-	for (int i = rmse_dat.size() - (10 * 1000); i < rmse_dat.size(); ++i){
-		rmse_log2 << rmse_dat[i] << "\n";
-	}
-	//for (auto r : rmse_dat) { rmse_log << r << "\n"; }
+	//ofstream rmse_log2;
+	//rmse_log2.open ("./rmse2_5.dat");
+	//for (int i = 0; i < rmse_dat.size(); i += instance_size){
+	//	std::sort (rmse_dat.begin()+i, rmse_dat.begin()+i+instance_size);
+	//}
+	//for (int i = 0; i < 10000; ++i){
+	//	rmse_log << rmse_dat[i] << "\n";
+	//}
+	//for (int i = rmse_dat.size() - (10 * 1000); i < rmse_dat.size(); ++i){
+	//	rmse_log2 << rmse_dat[i] << "\n";
+	//}
 	rmse_log.close();
 }
 
